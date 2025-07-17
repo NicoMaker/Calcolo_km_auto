@@ -566,3 +566,11 @@ th {
   font-size: 14px;
   line-height: 1;
 }
+
+button.red {
+  background-color: var(--red-button);
+}
+
+button.red:hover {
+  background-color: var(--red-button-dark);
+}
