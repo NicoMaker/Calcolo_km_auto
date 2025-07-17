@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracciatore KM Settimanali</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="card-title">Tracciatore KM Settimanali</h1>
+            <p class="card-description">Registra i tuoi chilometri e calcola i costi del carburante.</p>
+            <form id="recordForm" class="form-grid">
+                <div class="form-group">
+                    <label for="name">Nome (es. Auto A, Moto B)</label>
+                    <input type="text" id="name" name="name" placeholder="Nome del veicolo/categoria" required>
+                </div>
+                <div class="form-group">
+                    <label for="weekIdentifier">Settimana (es. 2025-W28)</label>
+                    <input type="text" id="weekIdentifier" name="weekIdentifier"
+                        placeholder="Anno-Settimana (es. 2025-W01)" required>
+                </div>
+                <div class="form-group">
+                    <label for="kilometers">KM Percorsi</label>
+                    <input type="number" step="0.01" id="kilometers" name="kilometers" placeholder="Es. 150.50"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="fuelEfficiency">KM per Litro</label>
+                    <input type="number" step="0.01" id="fuelEfficiency" name="fuelEfficiency" placeholder="Es. 18.2"
+                        required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="fuelType">Tipo Carburante</label>
+                    <select id="fuelType" name="fuelType" required>
+                        <option value="benzina">Benzina</option>
+                        <option value="diesel">Diesel</option>
+                        <option value="gpl">GPL</option>
+                        <option value="metano">Metano</option>
+                        <option value="elettrico">Elettrico</option>
+                    </select>
+                </div>
+                <div class="form-group full-width form-actions">
+                    <button type="submit" id="submitButton">Aggiungi Record</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Riepilogo Settimanale</h2>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Settimana</th>
+                            <th>KM</th>
+                            <th>Carburante</th>
+                            <th>Prezzo/L</th>
+                            <th>Costo Settimanale</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTableBody">
+                        <!-- Records will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <p id="noRecordsMessage" class="no-records-message">Nessun record trovato. Inizia aggiungendone uno!</p>
+            <div class="totals">
+                <div class="total-item">Totale KM: <span id="totalKilometers">0.00</span></div>
+                <div class="total-item">Costo Totale: <span id="totalCost">0.00</span> €</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+
+</html>

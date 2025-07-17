@@ -1,0 +1,15 @@
+{
+  "name": "calcolo_km_auto",
+  "version": "1.0.0",
+  "description": "Un'applicazione Node.js per tracciare i chilometri e i costi del carburante.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^11.1.2"
+  }
+}
