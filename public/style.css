@@ -245,14 +245,31 @@ button:disabled {
   color: #2563eb; /* Colore blu per i valori totali */
 }
 
-/* Utility classes for messages */
+/* Stili per i messaggi di notifica */
+.message-area {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
 .message {
   padding: 15px 20px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 10px; /* Spazio tra i messaggi se ce ne sono più di uno */
   font-size: 1em;
-  text-align: center;
   font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  opacity: 0; /* Inizialmente nascosto */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.message.show {
+  opacity: 1;
 }
 
 .message.success {
@@ -265,4 +282,82 @@ button:disabled {
   background-color: #fee2e2; /* Rosso chiaro */
   color: #dc2626; /* Rosso scuro */
   border: 1px solid #fca5a5;
+}
+
+/* Stili per il Modal */
+.modal {
+  display: none; /* Nascosto di default */
+  position: fixed; /* Posizione fissa sullo schermo */
+  z-index: 1001; /* Sopra tutto il resto */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Abilita lo scroll se il contenuto è troppo grande */
+  background-color: rgba(0, 0, 0, 0.6); /* Sfondo semi-trasparente */
+  display: flex; /* Usa flexbox per centrare */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto; /* Centra il modal */
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 600px; /* Larghezza massima del modal */
+  position: relative;
+  animation: fadeIn 0.3s ease-out; /* Animazione di apparizione */
+}
+
+.modal-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #2563eb;
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 32px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: #333;
+  text-decoration: none;
+}
+
+/* Animazioni */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
 }
