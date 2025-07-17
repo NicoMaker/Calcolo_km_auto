@@ -1,4 +1,4 @@
-console.log("script.js loaded and executing.") // LOG 1: Verifica che lo script sia caricato
+console.log("JS caricato!")
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOMContentLoaded event fired.") // LOG 2: Verifica che il DOM sia pronto

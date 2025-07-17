@@ -343,7 +343,6 @@ button:disabled {
   height: 100%;
   overflow: auto; /* Abilita lo scroll se il contenuto è troppo grande */
   background-color: rgba(0, 0, 0, 0.6); /* Sfondo semi-trasparente più scuro */
-  display: flex; /* Usa flexbox per centrare */
   justify-content: center;
   align-items: center;
   opacity: 0; /* Per l'animazione di fade-in */
