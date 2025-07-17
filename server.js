@@ -11,64 +11,62 @@ async function initializeDatabase() {
         console.log(`--- Diagnostica Inizializzazione Database ---`)
         console.log(`Percorso radice del progetto (__dirname): ${__dirname}`)
 
+        // Creazione cartella 'scripts'
         const scriptsDir = path.join(__dirname, "scripts")
         console.log(`Percorso della cartella 'scripts': ${scriptsDir}`)
 
-        // Verifica e crea la cartella 'scripts'
-        if (fs.existsSync(scriptsDir)) {
-            console.log(`La cartella 'scripts' ESISTE.`)
-            try {
-                const filesInScripts = fs.readdirSync(scriptsDir)
-                console.log(`Contenuto della cartella 'scripts':`)
-                if (filesInScripts.length === 0) {
-                    console.log(`  (La cartella 'scripts' è vuota)`)
-                } else {
-                    filesInScripts.forEach((file) => console.log(`  - ${file}`))
-                }
-            } catch (err) {
-                console.error(`Errore durante la lettura della cartella 'scripts': ${err.message}`)
-            }
-        } else {
+        if (!fs.existsSync(scriptsDir)) {
             console.log(`La cartella 'scripts' NON ESISTE. Creazione in corso...`)
             fs.mkdirSync(scriptsDir, { recursive: true })
             console.log("Cartella 'scripts' creata.")
+        } else {
+            console.log(`La cartella 'scripts' ESISTE.`)
+            const filesInScripts = fs.readdirSync(scriptsDir)
+            console.log(`Contenuto della cartella 'scripts':`)
+            filesInScripts.length === 0
+                ? console.log(`  (La cartella 'scripts' è vuota)`)
+                : filesInScripts.forEach((file) => console.log(`  - ${file}`))
         }
 
         const schemaPath = path.join(scriptsDir, "init-db.sql")
         console.log(`Percorso atteso del file 'init-db.sql': ${schemaPath}`)
 
-        // Verifica se il file 'init-db.sql' esiste nel percorso atteso
         if (!fs.existsSync(schemaPath)) {
             console.error(`ERRORE: Il file 'init-db.sql' NON ESISTE nel percorso atteso.`)
-            throw new Error(
-                `File init-db.sql non trovato a ${schemaPath}. Assicurati che esista e sia nominato correttamente.`,
-            )
+            throw new Error(`File init-db.sql non trovato a ${schemaPath}. Assicurati che esista e sia nominato correttamente.`)
         } else {
             console.log(`Il file 'init-db.sql' ESISTE nel percorso atteso.`)
         }
-        console.log(`--- Fine Diagnostica Inizializzazione Database ---`)
 
-        // Tenta di creare/aprire il database
-        try {
-            db = new Database("ddatabase.db", { verbose: console.log })
-            console.log("File database 'database.db' aperto/creato con successo.")
-        } catch (dbError) {
-            console.error("ERRORE: Impossibile aprire/creare il file database 'database.sqlite':", dbError)
-            throw new Error("Impossibile inizializzare la connessione al database.")
+        // Creazione cartella 'db'
+        const dbDir = path.join(__dirname, "db")
+        if (!fs.existsSync(dbDir)) {
+            console.log(`La cartella 'db' NON ESISTE. Creazione in corso...`)
+            fs.mkdirSync(dbDir, { recursive: true })
+            console.log("Cartella 'db' creata.")
+        } else {
+            console.log(`La cartella 'db' ESISTE.`)
         }
+
+        // Apertura/creazione database nel percorso 'db/database.db'
+        const dbPath = path.join(dbDir, "database.db")
+        db = new Database(dbPath, { verbose: console.log })
+        console.log(`File database aperto/creato con successo in: ${dbPath}`)
 
         const schema = fs.readFileSync(schemaPath, "utf8")
         db.exec(schema)
         console.log("Schema del database eseguito. Tabella 'weekly_records' inizializzata o già esistente (SQLite).")
+        console.log(`--- Fine Diagnostica Inizializzazione Database ---`)
     } catch (error) {
         console.error("Errore critico durante il processo di inizializzazione del database:", error)
         if (db && db.open) {
             db.close()
             console.log("Connessione al database chiusa a causa di un errore di inizializzazione.")
         }
-        process.exit(1) // Termina il processo Node.js se il DB non può essere inizializzato
+        process.exit(1)
     }
 }
+
 
 const server = http.createServer(async (req, res) => {
     // Se il database non è stato inizializzato, non procedere con le richieste API
