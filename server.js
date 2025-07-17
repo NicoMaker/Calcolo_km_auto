@@ -76,7 +76,6 @@ const server = http.createServer(async (req, res) => {
     return
   }
 
-  // Nuovo endpoint per ottenere i nomi unici delle auto
   if (pathname === "/api/names" && req.method === "GET") {
     try {
       const stmt = db.prepare("SELECT DISTINCT name FROM weekly_records ORDER BY name ASC;")
@@ -94,15 +93,12 @@ const server = http.createServer(async (req, res) => {
   if (pathname === "/api/records") {
     if (req.method === "GET") {
       try {
-        let nameFilters = parsedUrl.query.name // Può essere una stringa o un array di stringhe
-        let sql = "SELECT * FROM weekly_records"
+        let nameFilters = parsedUrl.query.name
+        let sql = `SELECT * FROM weekly_records`
         const params = []
 
         if (nameFilters) {
-          // Assicurati che nameFilters sia un array
-          if (!Array.isArray(nameFilters)) {
-            nameFilters = [nameFilters]
-          }
+          if (!Array.isArray(nameFilters)) nameFilters = [nameFilters]
           if (nameFilters.length > 0) {
             const placeholders = nameFilters.map(() => "?").join(", ")
             sql += ` WHERE name IN (${placeholders})`
@@ -110,13 +106,21 @@ const server = http.createServer(async (req, res) => {
           }
         }
 
-        // Ordina per anno (numerico), poi per settimana (numerico), poi per nome
-        // La logica di ordinamento è già corretta per gestire 'W01', 'W10' numericamente
-        sql +=
-          " ORDER BY SUBSTR(week_identifier, 1, 4) DESC, CAST(SUBSTR(week_identifier, INSTR(week_identifier, 'W') + 1) AS INTEGER) DESC, name ASC;"
+        sql += `
+          ORDER BY 
+            CAST(SUBSTR(week_identifier, 1, 4) AS INTEGER) ASC,
+            CAST(
+              CASE 
+                WHEN LENGTH(SUBSTR(week_identifier, INSTR(week_identifier, 'W') + 1)) = 1 
+                THEN '0' || SUBSTR(week_identifier, INSTR(week_identifier, 'W') + 1)
+                ELSE SUBSTR(week_identifier, INSTR(week_identifier, 'W') + 1)
+              END 
+            AS INTEGER) ASC,
+            name ASC;
+        `
 
         const stmt = db.prepare(sql)
-        const records = stmt.all(...params) // Passa i parametri alla query
+        const records = stmt.all(...params)
         res.writeHead(200, { "Content-Type": "application/json" })
         res.end(JSON.stringify(records))
       } catch (error) {
@@ -156,11 +160,11 @@ const server = http.createServer(async (req, res) => {
 
             db.prepare(
               `UPDATE weekly_records SET 
-                             kilometers = ?, 
-                             liters_consumed = ?, 
-                             calculated_cost = ?, 
-                             updated_at = CURRENT_TIMESTAMP 
-                             WHERE id = ?`,
+                kilometers = ?, 
+                liters_consumed = ?, 
+                calculated_cost = ?, 
+                updated_at = CURRENT_TIMESTAMP 
+              WHERE id = ?`,
             ).run(newTotalKilometers, newLitersConsumed, newCalculatedCost, existingRecord.id)
 
             res.writeHead(200, { "Content-Type": "application/json" })
@@ -171,8 +175,8 @@ const server = http.createServer(async (req, res) => {
 
             db.prepare(
               `INSERT INTO weekly_records 
-                            (name, week_identifier, kilometers, fuel_efficiency_km_per_liter, fuel_type, fuel_price_per_liter, liters_consumed, calculated_cost) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                (name, week_identifier, kilometers, fuel_efficiency_km_per_liter, fuel_type, fuel_price_per_liter, liters_consumed, calculated_cost) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
             ).run(
               name,
               weekIdentifier,
@@ -221,16 +225,16 @@ const server = http.createServer(async (req, res) => {
 
         db.prepare(
           `UPDATE weekly_records SET 
-                        name = ?, 
-                        week_identifier = ?, 
-                        kilometers = ?, 
-                        fuel_efficiency_km_per_liter = ?, 
-                        fuel_type = ?, 
-                        fuel_price_per_liter = ?, 
-                        liters_consumed = ?, 
-                        calculated_cost = ?, 
-                        updated_at = CURRENT_TIMESTAMP 
-                     WHERE id = ?`,
+            name = ?, 
+            week_identifier = ?, 
+            kilometers = ?, 
+            fuel_efficiency_km_per_liter = ?, 
+            fuel_type = ?, 
+            fuel_price_per_liter = ?, 
+            liters_consumed = ?, 
+            calculated_cost = ?, 
+            updated_at = CURRENT_TIMESTAMP 
+          WHERE id = ?`,
         ).run(
           name,
           weekIdentifier,
