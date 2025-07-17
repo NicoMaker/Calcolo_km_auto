@@ -50,8 +50,14 @@ async function initializeDatabase() {
 
         // Tenta di creare/aprire il database
         try {
-            db = new Database("database.sqlite", { verbose: console.log })
-            console.log("File database 'database.sqlite' aperto/creato con successo.")
+            // Crea la cartella 'db' se non esiste
+            if (!fs.existsSync('./db')) {
+                fs.mkdirSync('./db');
+            }
+
+            // Apre o crea il database dentro la cartella 'db'
+            const db = new Database('./db/database.db', { verbose: console.log });
+            console.log("File database 'database.db' aperto/creato con successo nella cartella 'db'.");
         } catch (dbError) {
             console.error("ERRORE: Impossibile aprire/creare il file database 'database.sqlite':", dbError)
             throw new Error("Impossibile inizializzare la connessione al database.")
