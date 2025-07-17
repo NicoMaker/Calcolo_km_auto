@@ -456,22 +456,6 @@ document.addEventListener("DOMContentLoaded", () => {
     filterDropdownButton.classList.remove("active")
   })
 
-  applyFilterButton.addEventListener("click", () => {
-    const selectedNames = Array.from(vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]:checked')).map(
-      (cb) => cb.value,
-    )
-
-    if (selectedNames.length === 0) {
-      showMessage("error", "Seleziona almeno un veicolo valido per applicare il filtro.")
-      return
-    }
-
-    fetchRecords(selectedNames)
-    filterDropdownContent.classList.remove("show") // Chiudi il dropdown dopo l'applicazione
-    filterDropdownButton.classList.remove("active")
-  })
-
-
   // Recupero iniziale dei record e popolamento filtro al caricamento della pagina
   fetchRecords()
   populateNameFilter()
