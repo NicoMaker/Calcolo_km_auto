@@ -16,37 +16,11 @@
         <div class="card">
             <h1 class="card-title">Tracciatore KM Settimanali</h1>
             <p class="card-description">Registra i tuoi chilometri e calcola i costi e il consumo di carburante.</p>
-            <form id="recordForm" class="form-grid">
-                <div class="form-group">
-                    <label for="name">Nome (es. Auto A, Moto B)</label>
-                    <input type="text" id="name" name="name" placeholder="Nome del veicolo/categoria" required>
-                </div>
-                <div class="form-group">
-                    <label for="weekIdentifier">Settimana (es. 2025-W28)</label>
-                    <input type="text" id="weekIdentifier" name="weekIdentifier" placeholder="Anno-Settimana (es. 2025-W01)" required>
-                </div>
-                <div class="form-group">
-                    <label for="kilometers">KM Percorsi</label>
-                    <input type="number" step="0.01" id="kilometers" name="kilometers" placeholder="Es. 150.50" required>
-                </div>
-                <div class="form-group">
-                    <label for="fuelEfficiency">KM per Litro</label>
-                    <input type="number" step="0.01" id="fuelEfficiency" name="fuelEfficiency" placeholder="Es. 18.2" required>
-                </div>
-                <div class="form-group full-width">
-                    <label for="fuelType">Tipo Carburante</label>
-                    <select id="fuelType" name="fuelType" required>
-                        <option value="benzina">Benzina</option>
-                        <option value="diesel">Diesel</option>
-                        <option value="gpl">GPL</option>
-                        <option value="metano">Metano</option>
-                        <option value="elettrico">Elettrico</option>
-                    </select>
-                </div>
-                <div class="form-group full-width form-actions">
-                    <button type="submit" id="submitButton">Aggiungi Record</button>
-                </div>
-            </form>
+            
+            <!-- Pulsante per aprire il modale di aggiunta -->
+            <div class="form-actions add-record-button-container">
+                <button type="button" id="openAddModalButton">Aggiungi Nuovo Record</button>
+            </div>
         </div>
 
         <div class="card">
@@ -79,10 +53,49 @@
         </div>
     </div>
 
-    <!-- Modal per la modifica -->
+    <!-- Modal per l'aggiunta di un nuovo record -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" data-modal-id="addModal">&times;</span>
+            <h2 class="modal-title">Aggiungi Nuovo Record</h2>
+            <form id="addRecordForm" class="form-grid">
+                <div class="form-group">
+                    <label for="addName">Nome (es. Auto A, Moto B)</label>
+                    <input type="text" id="addName" name="name" placeholder="Nome del veicolo/categoria" required>
+                </div>
+                <div class="form-group">
+                    <label for="addWeekIdentifier">Settimana (es. 2025-W28)</label>
+                    <input type="text" id="addWeekIdentifier" name="weekIdentifier" placeholder="Anno-Settimana (es. 2025-W01)" required>
+                </div>
+                <div class="form-group">
+                    <label for="addKilometers">KM Percorsi</label>
+                    <input type="number" step="0.01" id="addKilometers" name="kilometers" placeholder="Es. 150.50" required>
+                </div>
+                <div class="form-group">
+                    <label for="addFuelEfficiency">KM per Litro</label>
+                    <input type="number" step="0.01" id="addFuelEfficiency" name="fuelEfficiency" placeholder="Es. 18.2" required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="addFuelType">Tipo Carburante</label>
+                    <select id="addFuelType" name="fuelType" required>
+                        <option value="benzina">Benzina</option>
+                        <option value="diesel">Diesel</option>
+                        <option value="gpl">GPL</option>
+                        <option value="metano">Metano</option>
+                        <option value="elettrico">Elettrico</option>
+                    </select>
+                </div>
+                <div class="form-group full-width form-actions">
+                    <button type="submit" id="addSubmitButton">Aggiungi Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal per la modifica di un record esistente -->
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <span class="close-button" data-modal-id="editModal">&times;</span>
             <h2 class="modal-title">Modifica Record</h2>
             <form id="editRecordForm" class="form-grid">
                 <input type="hidden" id="editId" name="id">
@@ -116,6 +129,18 @@
                     <button type="submit" id="updateButton">Aggiorna Record</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal per la conferma di eliminazione -->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content small-modal">
+            <h2 class="modal-title">Conferma Eliminazione</h2>
+            <p>Sei sicuro di voler eliminare questo record?</p>
+            <div class="form-actions">
+                <button id="confirmDeleteButton" class="delete-btn">Elimina</button>
+                <button id="cancelDeleteButton" class="cancel-button">Annulla</button>
+            </div>
         </div>
     </div>
 
