@@ -4,11 +4,11 @@ const path = require("path")
 const url = require("url")
 const Database = require("better-sqlite3")
 
-let db
+let db // Variabile per la connessione al database
 
 async function initializeDatabase() {
   try {
-    console.log(`--- Diagnostica File System ---`)
+    console.log(`--- Diagnostica Inizializzazione Database ---`)
     console.log(`Percorso radice del progetto (__dirname): ${__dirname}`)
 
     const scriptsDir = path.join(__dirname, "scripts")
@@ -46,7 +46,7 @@ async function initializeDatabase() {
     } else {
       console.log(`Il file 'init-db.sql' ESISTE nel percorso atteso.`)
     }
-    console.log(`--- Fine Diagnostica File System ---`)
+    console.log(`--- Fine Diagnostica Inizializzazione Database ---`)
 
     // Tenta di creare/aprire il database
     try {
@@ -61,16 +61,17 @@ async function initializeDatabase() {
     db.exec(schema)
     console.log("Schema del database eseguito. Tabella 'weekly_records' inizializzata o già esistente (SQLite).")
   } catch (error) {
-    console.error("Errore durante il processo di inizializzazione del database:", error)
+    console.error("Errore critico durante il processo di inizializzazione del database:", error)
     if (db && db.open) {
       db.close()
       console.log("Connessione al database chiusa a causa di un errore di inizializzazione.")
     }
-    process.exit(1)
+    process.exit(1) // Termina il processo Node.js se il DB non può essere inizializzato
   }
 }
 
 const server = http.createServer(async (req, res) => {
+  // Se il database non è stato inizializzato, non procedere con le richieste API
   if (!db || !db.open) {
     res.writeHead(503, { "Content-Type": "application/json" })
     res.end(JSON.stringify({ message: "Server non pronto: Database non inizializzato." }))
@@ -80,6 +81,7 @@ const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url, true)
   const pathname = parsedUrl.pathname
 
+  // API per i prezzi del carburante (mock)
   if (pathname === "/api/fuel-price" && req.method === "GET") {
     const fuelType = parsedUrl.query.fuelType
     let price = 0
@@ -107,6 +109,7 @@ const server = http.createServer(async (req, res) => {
     return
   }
 
+  // API per i record settimanali
   if (pathname === "/api/records") {
     if (req.method === "GET") {
       try {
@@ -137,27 +140,40 @@ const server = http.createServer(async (req, res) => {
             return
           }
 
-          const PORT = process.env.PORT || 3000
+          // Fetch fuel price from internal API (simulated)
+          const PORT = process.env.PORT || 3000 // Usa la porta corrente del server
           const fuelPriceRes = await fetch(`http://localhost:${PORT}/api/fuel-price?fuelType=${fuelType}`)
           if (!fuelPriceRes.ok) {
             throw new Error("Impossibile recuperare il prezzo del carburante dall'API interna")
           }
           const { price: fuelPricePerLiter } = await fuelPriceRes.json()
 
-          const calculatedCost = (kilometers / fuelEfficiency) * fuelPricePerLiter
+          const litersConsumed = kilometers / fuelEfficiency // Calcolo dei litri consumati
+          const calculatedCost = litersConsumed * fuelPricePerLiter
 
+          // SQLite UPSERT syntax
           const stmt = db.prepare(`
-                        INSERT INTO weekly_records (name, week_identifier, kilometers, fuel_efficiency_km_per_liter, fuel_type, fuel_price_per_liter, calculated_cost, updated_at)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                        INSERT INTO weekly_records (name, week_identifier, kilometers, fuel_efficiency_km_per_liter, fuel_type, fuel_price_per_liter, liters_consumed, calculated_cost, updated_at)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
                         ON CONFLICT (name, week_identifier) DO UPDATE SET
                             kilometers = EXCLUDED.kilometers,
                             fuel_efficiency_km_per_liter = EXCLUDED.fuel_efficiency_km_per_liter,
                             fuel_type = EXCLUDED.fuel_type,
                             fuel_price_per_liter = EXCLUDED.fuel_price_per_liter,
+                            liters_consumed = EXCLUDED.liters_consumed,
                             calculated_cost = EXCLUDED.calculated_cost,
                             updated_at = CURRENT_TIMESTAMP;
                   `)
-          stmt.run(name, weekIdentifier, kilometers, fuelEfficiency, fuelType, fuelPricePerLiter, calculatedCost)
+          stmt.run(
+            name,
+            weekIdentifier,
+            kilometers,
+            fuelEfficiency,
+            fuelType,
+            fuelPricePerLiter,
+            litersConsumed, // Passa i litri consumati
+            calculatedCost,
+          )
 
           res.writeHead(200, { "Content-Type": "application/json" })
           res.end(JSON.stringify({ message: "Record salvato con successo!" }))
@@ -186,6 +202,7 @@ const server = http.createServer(async (req, res) => {
     return
   }
 
+  // Servire file statici
   const filePath = path.join(__dirname, "public", pathname === "/" ? "index.html" : pathname)
   const extname = String(path.extname(filePath)).toLowerCase()
   const mimeTypes = {

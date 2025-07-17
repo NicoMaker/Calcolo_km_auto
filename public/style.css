@@ -1,52 +1,53 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
+  font-family: "Inter", sans-serif; /* Un font moderno e pulito */
   margin: 0;
   padding: 20px;
-  background-color: #f0f2f5;
-  color: #333;
+  background-color: #f8fafc; /* Sfondo molto chiaro */
+  color: #1e293b; /* Testo scuro */
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
   box-sizing: border-box;
+  line-height: 1.6;
 }
 
 .container {
   width: 100%;
-  max-width: 960px;
+  max-width: 1000px; /* Larghezza leggermente maggiore */
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px; /* Spazio maggiore tra le card */
 }
 
 .card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 12px; /* Bordi più arrotondati */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Ombra più pronunciata */
+  padding: 30px; /* Padding maggiore */
+  border: 1px solid #e2e8f0; /* Bordo sottile */
 }
 
 .card-title {
-  font-size: 1.8em;
-  font-weight: 700;
-  color: #222;
+  font-size: 2.2em; /* Titolo più grande */
+  font-weight: 800; /* Più bold */
+  color: #2563eb; /* Blu Vercel-like */
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   text-align: center;
 }
 
 .card-description {
-  font-size: 0.95em;
-  color: #666;
-  margin-bottom: 25px;
+  font-size: 1em;
+  color: #64748b; /* Grigio più morbido */
+  margin-bottom: 30px;
   text-align: center;
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 15px;
+  gap: 20px; /* Spazio maggiore tra i campi */
 }
 
 @media (min-width: 600px) {
@@ -64,46 +65,48 @@ body {
 }
 
 .form-group label {
-  font-size: 0.9em;
+  font-size: 0.95em;
   font-weight: 600;
-  margin-bottom: 6px;
-  color: #444;
+  margin-bottom: 8px;
+  color: #334155; /* Grigio scuro */
 }
 
 .form-group input,
 .form-group select {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 12px 15px; /* Padding maggiore */
+  border: 1px solid #cbd5e1; /* Bordo più chiaro */
+  border-radius: 8px; /* Bordi arrotondati */
   font-size: 1em;
-  color: #333;
+  color: #1e293b;
+  background-color: #f8fafc; /* Sfondo input leggermente diverso */
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  border-color: #2563eb; /* Blu al focus */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* Ombra blu al focus */
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 button {
-  background-color: #007bff;
+  background-color: #2563eb; /* Blu primario */
   color: #fff;
-  padding: 10px 20px;
+  padding: 12px 25px; /* Padding maggiore */
   border: none;
-  border-radius: 6px;
+  border-radius: 8px; /* Bordi arrotondati */
   font-size: 1em;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, opacity 0.2s ease;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
   width: 100%;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2); /* Ombra per il bottone */
 }
 
 @media (min-width: 600px) {
@@ -113,96 +116,111 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #1d4ed8; /* Blu più scuro all'hover */
+  transform: translateY(-1px); /* Leggero sollevamento */
+}
+
+button:active {
+  transform: translateY(0); /* Ritorno alla posizione originale */
 }
 
 button:disabled {
-  background-color: #a0c8f5;
+  background-color: #93c5fd; /* Blu più chiaro quando disabilitato */
   cursor: not-allowed;
-  opacity: 0.7;
+  opacity: 0.8;
+  box-shadow: none;
 }
 
 .table-responsive {
   overflow-x: auto;
-  margin-top: 20px;
+  margin-top: 25px;
+  border: 1px solid #e2e8f0; /* Bordo per la tabella */
+  border-radius: 8px;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
+  margin-bottom: 0; /* Rimosso margine inferiore */
 }
 
 .data-table th,
 .data-table td {
-  padding: 12px 15px;
+  padding: 14px 18px; /* Padding maggiore */
   text-align: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e2e8f0; /* Linee divisorie più chiare */
 }
 
 .data-table th {
-  background-color: #f8f8f8;
+  background-color: #f1f5f9; /* Sfondo header tabella */
   font-size: 0.9em;
-  font-weight: 600;
-  color: #555;
+  font-weight: 700; /* Più bold */
+  color: #475569; /* Grigio scuro */
   text-transform: uppercase;
+  letter-spacing: 0.05em; /* Spaziatura lettere */
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none; /* Rimuovi bordo inferiore ultima riga */
 }
 
 .data-table tbody tr:hover {
-  background-color: #f5f5f5;
+  background-color: #f8fafc; /* Sfondo leggero all'hover */
 }
 
 .data-table td {
   font-size: 0.95em;
-  color: #333;
+  color: #334155;
 }
 
 .data-table td.actions {
   display: flex;
-  gap: 8px;
+  gap: 10px; /* Spazio maggiore tra i bottoni */
   justify-content: flex-end;
 }
 
 .data-table td.actions button {
   padding: 8px 12px;
   font-size: 0.85em;
-  border-radius: 4px;
-  width: auto; /* Override 100% width for action buttons */
+  border-radius: 6px; /* Bordi arrotondati */
+  width: auto;
+  box-shadow: none; /* Rimuovi ombra per i bottoni piccoli */
 }
 
 .data-table td.actions .edit-btn {
-  background-color: #28a745;
+  background-color: #22c55e; /* Verde */
 }
 
 .data-table td.actions .edit-btn:hover {
-  background-color: #218838;
+  background-color: #16a34a; /* Verde più scuro */
 }
 
 .data-table td.actions .delete-btn {
-  background-color: #dc3545;
+  background-color: #ef4444; /* Rosso */
 }
 
 .data-table td.actions .delete-btn:hover {
-  background-color: #c82333;
+  background-color: #dc2626; /* Rosso più scuro */
 }
 
 .no-records-message {
   text-align: center;
-  color: #888;
-  padding: 20px;
+  color: #94a3b8; /* Grigio chiaro */
+  padding: 25px;
   font-style: italic;
+  font-size: 1em;
 }
 
 .totals {
-  border-top: 1px solid #eee;
-  padding-top: 20px;
-  margin-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 25px;
+  margin-top: 25px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: 1.1em;
-  font-weight: 600;
-  color: #222;
+  gap: 15px; /* Spazio maggiore tra i totali */
+  font-size: 1.2em; /* Testo più grande */
+  font-weight: 700;
+  color: #1e293b;
 }
 
 @media (min-width: 600px) {
@@ -214,6 +232,7 @@ button:disabled {
 
 .total-item {
   text-align: center;
+  flex-grow: 1; /* Distribuisci lo spazio equamente */
 }
 
 @media (min-width: 600px) {
@@ -222,23 +241,28 @@ button:disabled {
   }
 }
 
+.total-item span {
+  color: #2563eb; /* Colore blu per i valori totali */
+}
+
 /* Utility classes for messages */
 .message {
-  padding: 10px 15px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  font-size: 0.95em;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 1em;
   text-align: center;
+  font-weight: 500;
 }
 
 .message.success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background-color: #dcfce7; /* Verde chiaro */
+  color: #16a34a; /* Verde scuro */
+  border: 1px solid #bbf7d0;
 }
 
 .message.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background-color: #fee2e2; /* Rosso chiaro */
+  color: #dc2626; /* Rosso scuro */
+  border: 1px solid #fca5a5;
 }

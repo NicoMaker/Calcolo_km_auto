@@ -1,7 +1,7 @@
 {
-  "name": "calcolo_km_auto",
+  "name": "tracciatore-km-moderno",
   "version": "1.0.0",
-  "description": "Un'applicazione Node.js per tracciare i chilometri e i costi del carburante.",
+  "description": "Applicazione Node.js, HTML, CSS, JS per tracciare KM e costi carburante.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

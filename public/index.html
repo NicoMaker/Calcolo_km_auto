@@ -12,7 +12,7 @@
     <div class="container">
         <div class="card">
             <h1 class="card-title">Tracciatore KM Settimanali</h1>
-            <p class="card-description">Registra i tuoi chilometri e calcola i costi del carburante.</p>
+            <p class="card-description">Registra i tuoi chilometri e calcola i costi e il consumo di carburante.</p>
             <form id="recordForm" class="form-grid">
                 <div class="form-group">
                     <label for="name">Nome (es. Auto A, Moto B)</label>
@@ -60,6 +60,7 @@
                             <th>KM</th>
                             <th>Carburante</th>
                             <th>Prezzo/L</th>
+                            <th>Litri Consumati</th> <!-- Nuova colonna -->
                             <th>Costo Settimanale</th>
                             <th>Azioni</th>
                         </tr>
@@ -72,6 +73,8 @@
             <p id="noRecordsMessage" class="no-records-message">Nessun record trovato. Inizia aggiungendone uno!</p>
             <div class="totals">
                 <div class="total-item">Totale KM: <span id="totalKilometers">0.00</span></div>
+                <div class="total-item">Totale Litri Consumati: <span id="totalLitersConsumed">0.00</span> L</div>
+                <!-- Nuovo totale -->
                 <div class="total-item">Costo Totale: <span id="totalCost">0.00</span> €</div>
             </div>
         </div>
