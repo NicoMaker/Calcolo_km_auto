@@ -1,12 +1,38 @@
 /* Importa il font Inter da Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
+:root {
+  --background-light: #f8fafc;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --text-medium: #334155;
+  --text-header: #475569;
+  --primary-blue: #2563eb;
+  --primary-blue-dark: #1d4ed8;
+  --primary-blue-light: #93c5fd;
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --card-background: #ffffff;
+  --input-background: #f8fafc;
+  --table-header-background: #f1f5f9;
+  --success-bg: #dcfce7;
+  --success-text: #16a34a;
+  --error-bg: #fee2e2;
+  --error-text: #dc2626;
+  --green-button: #22c55e;
+  --green-button-dark: #16a34a;
+  --red-button: #ef4444;
+  --red-button-dark: #dc2626;
+  --gray-button: #64748b;
+  --gray-button-dark: #475569;
+}
+
 body {
   font-family: "Inter", sans-serif; /* Un font moderno e pulito */
   margin: 0;
   padding: 20px;
-  background-color: #f8fafc; /* Sfondo molto chiaro */
-  color: #1e293b; /* Testo scuro */
+  background-color: var(--background-light); /* Sfondo molto chiaro */
+  color: var(--text-dark); /* Testo scuro */
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -17,24 +43,24 @@ body {
 
 .container {
   width: 100%;
-  max-width: 1000px; /* Larghezza leggermente maggiore */
+  max-width: 1100px; /* Larghezza leggermente maggiore */
   display: flex;
   flex-direction: column;
   gap: 25px; /* Spazio maggiore tra le card */
 }
 
 .card {
-  background-color: #ffffff;
+  background-color: var(--card-background);
   border-radius: 12px; /* Bordi più arrotondati */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Ombra più pronunciata */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06); /* Ombra più pronunciata e morbida */
   padding: 30px; /* Padding maggiore */
-  border: 1px solid #e2e8f0; /* Bordo sottile */
+  border: 1px solid var(--border-light); /* Bordo sottile */
 }
 
 .card-title {
-  font-size: 2.2em; /* Titolo più grande */
+  font-size: clamp(1.8em, 5vw, 2.5em); /* Titolo responsivo */
   font-weight: 800; /* Più bold */
-  color: #2563eb; /* Blu Vercel-like */
+  color: var(--primary-blue); /* Blu Vercel-like */
   margin-top: 0;
   margin-bottom: 15px;
   text-align: center;
@@ -42,7 +68,7 @@ body {
 
 .card-description {
   font-size: 1em;
-  color: #64748b; /* Grigio più morbido */
+  color: var(--text-muted); /* Grigio più morbido */
   margin-bottom: 30px;
   text-align: center;
 }
@@ -71,24 +97,24 @@ body {
   font-size: 0.95em;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #334155; /* Grigio scuro */
+  color: var(--text-medium); /* Grigio scuro */
 }
 
 .form-group input,
 .form-group select {
   padding: 12px 15px; /* Padding maggiore */
-  border: 1px solid #cbd5e1; /* Bordo più chiaro */
+  border: 1px solid var(--border-medium); /* Bordo più chiaro */
   border-radius: 8px; /* Bordi arrotondati */
   font-size: 1em;
-  color: #1e293b;
-  background-color: #f8fafc; /* Sfondo input leggermente diverso */
+  color: var(--text-dark);
+  background-color: var(--input-background); /* Sfondo input leggermente diverso */
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #2563eb; /* Blu al focus */
+  border-color: var(--primary-blue); /* Blu al focus */
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* Ombra blu al focus */
 }
 
@@ -102,6 +128,7 @@ body {
   display: flex;
   justify-content: flex-end;
   margin-top: 15px;
+  gap: 15px; /* Spazio tra i bottoni */
 }
 
 .add-record-button-container {
@@ -110,7 +137,7 @@ body {
 }
 
 button {
-  background-color: #2563eb; /* Blu primario */
+  background-color: var(--primary-blue); /* Blu primario */
   color: #fff;
   padding: 12px 25px; /* Padding maggiore */
   border: none;
@@ -118,9 +145,9 @@ button {
   font-size: 1em;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
   width: 100%;
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2); /* Ombra per il bottone */
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15); /* Ombra per il bottone */
 }
 
 @media (min-width: 600px) {
@@ -130,16 +157,18 @@ button {
 }
 
 button:hover {
-  background-color: #1d4ed8; /* Blu più scuro all'hover */
+  background-color: var(--primary-blue-dark); /* Blu più scuro all'hover */
   transform: translateY(-1px); /* Leggero sollevamento */
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
 button:active {
   transform: translateY(0); /* Ritorno alla posizione originale */
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
 }
 
 button:disabled {
-  background-color: #93c5fd; /* Blu più chiaro quando disabilitato */
+  background-color: var(--primary-blue-light); /* Blu più chiaro quando disabilitato */
   cursor: not-allowed;
   opacity: 0.8;
   box-shadow: none;
@@ -148,8 +177,9 @@ button:disabled {
 .table-responsive {
   overflow-x: auto;
   margin-top: 25px;
-  border: 1px solid #e2e8f0; /* Bordo per la tabella */
+  border: 1px solid var(--border-light); /* Bordo per la tabella */
   border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); /* Ombra leggera per la tabella */
 }
 
 .data-table {
@@ -162,14 +192,14 @@ button:disabled {
 .data-table td {
   padding: 14px 18px; /* Padding maggiore */
   text-align: left;
-  border-bottom: 1px solid #e2e8f0; /* Linee divisorie più chiare */
+  border-bottom: 1px solid var(--border-light); /* Linee divisorie più chiare */
 }
 
 .data-table th {
-  background-color: #f1f5f9; /* Sfondo header tabella */
+  background-color: var(--table-header-background); /* Sfondo header tabella */
   font-size: 0.9em;
   font-weight: 700; /* Più bold */
-  color: #475569; /* Grigio scuro */
+  color: var(--text-header); /* Grigio scuro */
   text-transform: uppercase;
   letter-spacing: 0.05em; /* Spaziatura lettere */
 }
@@ -179,18 +209,18 @@ button:disabled {
 }
 
 .data-table tbody tr:hover {
-  background-color: #f8fafc; /* Sfondo leggero all'hover */
+  background-color: var(--background-light); /* Sfondo leggero all'hover */
 }
 
 .data-table td {
   font-size: 0.95em;
-  color: #334155;
+  color: var(--text-medium);
 }
 
 .data-table td.actions {
   display: flex;
   gap: 10px; /* Spazio maggiore tra i bottoni */
-  justify-content: flex-end;
+  justify-content: center; /* Centra i bottoni di azione */
 }
 
 .data-table td.actions button {
@@ -202,31 +232,31 @@ button:disabled {
 }
 
 .data-table td.actions .edit-btn {
-  background-color: #22c55e; /* Verde */
+  background-color: var(--green-button); /* Verde */
 }
 
 .data-table td.actions .edit-btn:hover {
-  background-color: #16a34a; /* Verde più scuro */
+  background-color: var(--green-button-dark); /* Verde più scuro */
 }
 
 .data-table td.actions .delete-btn {
-  background-color: #ef4444; /* Rosso */
+  background-color: var(--red-button); /* Rosso */
 }
 
 .data-table td.actions .delete-btn:hover {
-  background-color: #dc2626; /* Rosso più scuro */
+  background-color: var(--red-button-dark); /* Rosso più scuro */
 }
 
 .no-records-message {
   text-align: center;
-  color: #94a3b8; /* Grigio chiaro */
+  color: var(--text-muted); /* Grigio chiaro */
   padding: 25px;
   font-style: italic;
   font-size: 1em;
 }
 
 .totals {
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border-light);
   padding-top: 25px;
   margin-top: 25px;
   display: flex;
@@ -234,7 +264,7 @@ button:disabled {
   gap: 15px; /* Spazio maggiore tra i totali */
   font-size: 1.2em; /* Testo più grande */
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-dark);
 }
 
 @media (min-width: 600px) {
@@ -256,7 +286,7 @@ button:disabled {
 }
 
 .total-item span {
-  color: #2563eb; /* Colore blu per i valori totali */
+  color: var(--primary-blue); /* Colore blu per i valori totali */
 }
 
 /* Stili per i messaggi di notifica */
@@ -291,15 +321,15 @@ button:disabled {
 }
 
 .message.success {
-  background-color: #dcfce7; /* Verde chiaro */
-  color: #16a34a; /* Verde scuro */
-  border: 1px solid #bbf7d0;
+  background-color: var(--success-bg); /* Verde chiaro */
+  color: var(--success-text); /* Verde scuro */
+  border: 1px solid var(--success-text);
 }
 
 .message.error {
-  background-color: #fee2e2; /* Rosso chiaro */
-  color: #dc2626; /* Rosso scuro */
-  border: 1px solid #fca5a5;
+  background-color: var(--error-bg); /* Rosso chiaro */
+  color: var(--error-text); /* Rosso scuro */
+  border: 1px solid var(--error-text);
 }
 
 /* Stili per i Modal */
@@ -312,7 +342,7 @@ button:disabled {
   width: 100%;
   height: 100%;
   overflow: auto; /* Abilita lo scroll se il contenuto è troppo grande */
-  background-color: rgba(0, 0, 0, 0.7); /* Sfondo semi-trasparente più scuro per debug */
+  background-color: rgba(0, 0, 0, 0.6); /* Sfondo semi-trasparente più scuro */
   display: flex; /* Usa flexbox per centrare */
   justify-content: center;
   align-items: center;
@@ -326,7 +356,7 @@ button:disabled {
 }
 
 .modal-content {
-  background-color: #fefefe;
+  background-color: var(--card-background);
   margin: auto; /* Centra il modal */
   padding: 30px;
   border-radius: 12px;
@@ -350,7 +380,7 @@ button:disabled {
 .modal-title {
   font-size: 1.8em;
   font-weight: 700;
-  color: #2563eb;
+  color: var(--primary-blue);
   margin-top: 0;
   margin-bottom: 20px;
   text-align: center;
@@ -383,13 +413,16 @@ button:disabled {
 }
 
 .cancel-button {
-  background-color: #64748b; /* Grigio per annulla */
+  background-color: var(--gray-button); /* Grigio per annulla */
+  box-shadow: 0 2px 8px rgba(100, 116, 139, 0.15);
 }
 
 .cancel-button:hover {
-  background-color: #475569;
+  background-color: var(--gray-button-dark);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.25);
 }
 
+/* Allinea il testo al centro per tutte le celle della tabella */
 tr,
 td,
 th {
@@ -403,7 +436,7 @@ th {
   gap: 15px;
   margin-bottom: 25px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .filter-section .form-actions {
@@ -440,17 +473,23 @@ th {
   align-items: center;
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-medium);
   border-radius: 8px;
-  background-color: #f8fafc;
+  background-color: var(--input-background);
   font-size: 1em;
-  color: #1e293b;
+  color: var(--text-dark);
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .custom-select-button:hover {
-  border-color: #2563eb;
+  border-color: var(--primary-blue);
+}
+
+.custom-select-button:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 .custom-select-button .arrow-down {
@@ -465,11 +504,11 @@ th {
 .custom-select-dropdown {
   display: none;
   position: absolute;
-  top: 100%; /* Sotto il pulsante */
+  top: calc(100% + 8px); /* Sotto il pulsante con un piccolo spazio */
   left: 0;
   width: 100%;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-light);
   border-radius: 8px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   z-index: 10;
@@ -491,7 +530,7 @@ th {
 }
 
 .checkbox-item:hover {
-  background-color: #f1f5f9;
+  background-color: var(--table-header-background);
 }
 
 .checkbox-item input[type="checkbox"] {
@@ -499,7 +538,7 @@ th {
   /* Stili base per la checkbox */
   width: 18px;
   height: 18px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-medium);
   border-radius: 4px;
   appearance: none; /* Rimuove lo stile predefinito del browser */
   -webkit-appearance: none;
@@ -508,11 +547,12 @@ th {
   cursor: pointer;
   position: relative;
   background-color: #fff;
+  flex-shrink: 0; /* Impedisce alla checkbox di rimpicciolirsi */
 }
 
 .checkbox-item input[type="checkbox"]:checked {
-  background-color: #2563eb; /* Blu quando selezionato */
-  border-color: #2563eb;
+  background-color: var(--primary-blue); /* Blu quando selezionato */
+  border-color: var(--primary-blue);
 }
 
 .checkbox-item input[type="checkbox"]:checked::before {
