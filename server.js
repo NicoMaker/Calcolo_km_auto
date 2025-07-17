@@ -150,6 +150,25 @@ app.put("/api/records/:id", async (req, res) => {
 
   res.json({ message: "Record aggiornato con successo!" })
 })
+
+app.delete("/api/records", (req, res) => {
+  try {
+    let names = req.query.name
+    let sql = `DELETE FROM weekly_records`
+    const params = []
+    if (names) {
+      if (!Array.isArray(names)) names = [names]
+      const placeholders = names.map(() => "?").join(", ")
+      sql += ` WHERE name IN (${placeholders})`
+      params.push(...names)
+    }
+    const stmt = db.prepare(sql)
+    const info = stmt.run(...params)
+    res.json({ message: `Eliminati ${info.changes} record.` })
+  } catch (error) {
+    res.status(500).json({ message: "Errore nell'eliminazione dei record." })
+  }
+})
 // Avvio
 initializeDatabase().then(() => {
   app.listen(PORT, () => {

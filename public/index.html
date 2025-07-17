@@ -47,6 +47,7 @@
                 <div class="form-actions">
                     <button type="button" id="applyFilterButton">Applica Filtro</button>
                     <button type="button" id="clearFilterButton" class="cancel-button">Pulisci Filtro</button>
+                    <button type="button" id="deleteAllButton" class="delete-btn delete-all-btn">Elimina Tutti i Filtrati</button>
                 </div>
             </div>
 
@@ -165,6 +166,18 @@
             <div class="form-actions">
                 <button id="confirmDeleteButton" class="delete-btn">Elimina</button>
                 <button id="cancelDeleteButton" class="cancel-button">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal per la conferma di eliminazione multipla -->
+    <div id="deleteAllConfirmModal" class="modal">
+        <div class="modal-content small-modal">
+            <h2 class="modal-title">Conferma Eliminazione</h2>
+            <p id="deleteAllConfirmText">Sei sicuro di voler eliminare tutti i record filtrati?</p>
+            <div class="form-actions">
+                <button id="confirmDeleteAllButton" class="delete-btn delete-all-btn">Elimina</button>
+                <button id="cancelDeleteAllButton" class="cancel-button">Annulla</button>
             </div>
         </div>
     </div>

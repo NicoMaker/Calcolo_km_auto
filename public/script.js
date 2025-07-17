@@ -38,6 +38,57 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelDeleteButton = document.getElementById("cancelDeleteButton")
   let recordToDeleteId = null // Variabile per memorizzare l'ID da eliminare
 
+  // Elementi del Modal di Conferma Eliminazione Multipla
+  const deleteAllConfirmModal = document.getElementById("deleteAllConfirmModal")
+  const deleteAllConfirmText = document.getElementById("deleteAllConfirmText")
+  const confirmDeleteAllButton = document.getElementById("confirmDeleteAllButton")
+  const cancelDeleteAllButton = document.getElementById("cancelDeleteAllButton")
+
+  // Bottone elimina tutti/filtrati
+  const deleteAllButton = document.getElementById("deleteAllButton")
+  let deleteAllMode = "filtered" // "filtered" o "all"
+  deleteAllButton.addEventListener("click", () => {
+    if (currentNameFilter.length === 0) {
+      deleteAllConfirmText.textContent = "Sei sicuro di voler eliminare TUTTI i record? Questa azione non può essere annullata.";
+      deleteAllMode = "all"
+    } else {
+      deleteAllConfirmText.textContent = "Sei sicuro di voler eliminare tutti i record filtrati? Questa azione non può essere annullata.";
+      deleteAllMode = "filtered"
+    }
+    toggleModal(deleteAllConfirmModal, true)
+  })
+
+  confirmDeleteAllButton.addEventListener("click", async () => {
+    confirmDeleteAllButton.disabled = true
+    confirmDeleteAllButton.textContent = "Eliminazione..."
+    try {
+      let url = "/api/records"
+      if (deleteAllMode === "filtered") {
+        const queryParams = currentNameFilter.map((name) => `name=${encodeURIComponent(name)}`).join("&")
+        url += `?${queryParams}`
+      }
+      const response = await fetch(url, { method: "DELETE" })
+      const result = await response.json()
+      if (response.ok) {
+        showMessage("success", result.message)
+        fetchRecords(currentNameFilter)
+        populateNameFilter()
+      } else {
+        showMessage("error", "Errore: " + result.message)
+      }
+    } catch (error) {
+      showMessage("error", "Errore durante l'eliminazione dei record.")
+    } finally {
+      toggleModal(deleteAllConfirmModal, false)
+      confirmDeleteAllButton.disabled = false
+      confirmDeleteAllButton.textContent = "Elimina"
+    }
+  })
+
+  cancelDeleteAllButton.addEventListener("click", () => {
+    toggleModal(deleteAllConfirmModal, false)
+  })
+
   // Elementi del Filtro Personalizzato
   const filterDropdownButton = document.getElementById("filterDropdownButton")
   const filterDropdownContent = document.getElementById("filterDropdownContent")
