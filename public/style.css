@@ -92,6 +92,12 @@ body {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* Ombra blu al focus */
 }
 
+/* Stili specifici per il select multiplo (vecchio, non più usato per il filtro) */
+.form-group select[multiple] {
+  min-height: 120px; /* Altezza minima per mostrare più opzioni */
+  padding: 10px 15px;
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -306,12 +312,7 @@ button:disabled {
   width: 100%;
   height: 100%;
   overflow: auto; /* Abilita lo scroll se il contenuto è troppo grande */
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.7
-  ); /* Sfondo semi-trasparente più scuro per debug */
+  background-color: rgba(0, 0, 0, 0.7); /* Sfondo semi-trasparente più scuro per debug */
   display: flex; /* Usa flexbox per centrare */
   justify-content: center;
   align-items: center;
@@ -393,4 +394,135 @@ tr,
 td,
 th {
   text-align: center !important;
+}
+
+/* Stili aggiuntivi per la sezione filtro */
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.filter-section .form-actions {
+  justify-content: flex-start; /* Allinea i bottoni del filtro a sinistra */
+  gap: 10px;
+  margin-top: 0;
+}
+
+@media (min-width: 600px) {
+  .filter-section {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .filter-section .form-group {
+    flex-grow: 1;
+    margin-bottom: 0;
+  }
+  .filter-section .form-actions {
+    margin-top: 0;
+  }
+}
+
+/* Stili per il filtro a tendina personalizzato */
+.custom-select-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px; /* Larghezza massima per il dropdown */
+}
+
+.custom-select-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  font-size: 1em;
+  color: #1e293b;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-select-button:hover {
+  border-color: #2563eb;
+}
+
+.custom-select-button .arrow-down {
+  margin-left: 10px;
+  transition: transform 0.2s ease;
+}
+
+.custom-select-button.active .arrow-down {
+  transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%; /* Sotto il pulsante */
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  padding: 10px 0;
+  max-height: 250px; /* Altezza massima per lo scroll */
+  overflow-y: auto;
+}
+
+.custom-select-dropdown.show {
+  display: block;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.checkbox-item:hover {
+  background-color: #f1f5f9;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-right: 10px;
+  /* Stili base per la checkbox */
+  width: 18px;
+  height: 18px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  appearance: none; /* Rimuove lo stile predefinito del browser */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  background-color: #fff;
+}
+
+.checkbox-item input[type="checkbox"]:checked {
+  background-color: #2563eb; /* Blu quando selezionato */
+  border-color: #2563eb;
+}
+
+.checkbox-item input[type="checkbox"]:checked::before {
+  content: "\2713"; /* Segno di spunta Unicode */
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  line-height: 1;
 }

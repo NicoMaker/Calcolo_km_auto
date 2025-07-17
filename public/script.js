@@ -38,6 +38,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelDeleteButton = document.getElementById("cancelDeleteButton")
   let recordToDeleteId = null // Variabile per memorizzare l'ID da eliminare
 
+  // Elementi del Filtro Personalizzato
+  const filterDropdownButton = document.getElementById("filterDropdownButton")
+  const filterDropdownContent = document.getElementById("filterDropdownContent")
+  const selectAllVehiclesCheckbox = document.getElementById("selectAllVehicles")
+  const vehicleOptionsContainer = document.getElementById("vehicleOptionsContainer")
+  const applyFilterButton = document.getElementById("applyFilterButton")
+  const clearFilterButton = document.getElementById("clearFilterButton")
+  let currentNameFilter = [] // Variabile per memorizzare il filtro attivo (ora un array)
+
   // Force all modals to be hidden on load to prevent any stuck state
   addModal.style.display = "none"
   editModal.style.display = "none"
@@ -84,22 +93,75 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3000)
   }
 
-  // Funzione per recuperare i record dal server
-  async function fetchRecords() {
-    console.log("Fetching records...") // LOG 5: Traccia il recupero dati
+  // Funzione per recuperare i record dal server con filtro
+  async function fetchRecords(nameFilters = currentNameFilter) {
+    console.log(`Fetching records with filters: "${nameFilters.join(", ")}"`) // LOG 5: Traccia il recupero dati
+    currentNameFilter = nameFilters // Aggiorna il filtro corrente
+
+    let url = "/api/records"
+    if (nameFilters && nameFilters.length > 0) {
+      const queryParams = nameFilters.map((name) => `name=${encodeURIComponent(name)}`).join("&")
+      url += `?${queryParams}`
+    }
+
     try {
-      const response = await fetch("/api/records")
+      const response = await fetch(url)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       const records = await response.json()
       renderRecords(records)
-      updateTotals(records)
+      updateTotals(records) // Aggiorna i totali con i record filtrati
       console.log("Records fetched and rendered successfully.") // LOG 6: Conferma recupero
     } catch (error) {
       console.error("Errore nel recupero dei record:", error)
       showMessage("error", "Errore nel recupero dei record.")
     }
+  }
+
+  // Funzione per popolare il filtro a tendina con i nomi delle auto
+  async function populateNameFilter() {
+    try {
+      const response = await fetch("/api/names") // API per i nomi unici
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const names = await response.json()
+
+      vehicleOptionsContainer.innerHTML = "" // Pulisci le opzioni esistenti
+
+      names.forEach((name) => {
+        const label = document.createElement("label")
+        label.className = "checkbox-item"
+        const checkbox = document.createElement("input")
+        checkbox.type = "checkbox"
+        checkbox.value = name
+        checkbox.id = `filter-${name.replace(/\s/g, "-")}` // ID unico per la checkbox
+
+        // Pre-seleziona se il nome è nel filtro corrente
+        if (currentNameFilter.includes(name)) {
+          checkbox.checked = true
+        }
+
+        checkbox.addEventListener("change", updateSelectAllCheckbox)
+
+        label.appendChild(checkbox)
+        label.appendChild(document.createTextNode(name))
+        vehicleOptionsContainer.appendChild(label)
+      })
+
+      updateSelectAllCheckbox() // Aggiorna lo stato di "Seleziona tutti" dopo aver popolato
+    } catch (error) {
+      console.error("Errore nel recupero dei nomi per il filtro:", error)
+      showMessage("error", "Errore nel caricamento dei filtri nome.")
+    }
+  }
+
+  // Funzione per aggiornare lo stato della checkbox "Seleziona tutti"
+  function updateSelectAllCheckbox() {
+    const allCheckboxes = Array.from(vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]'))
+    const allChecked = allCheckboxes.every((cb) => cb.checked)
+    selectAllVehiclesCheckbox.checked = allChecked
   }
 
   // Funzione per renderizzare i record nella tabella
@@ -143,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  // Funzione per aggiornare i totali
+  // Funzione per aggiornare i totali (ora basata sui record passati, che saranno già filtrati)
   function updateTotals(records) {
     const totalKilometers = records.reduce((sum, record) => sum + record.kilometers, 0)
     const totalLitersConsumed = records.reduce((sum, record) => sum + record.liters_consumed, 0)
@@ -201,7 +263,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (response.ok) {
         showMessage("success", result.message)
         toggleModal(addModal, false) // Chiudi il modale
-        fetchRecords() // Ricarica e renderizza i record
+        fetchRecords(currentNameFilter) // Ricarica e renderizza i record con il filtro corrente
+        populateNameFilter() // Aggiorna il filtro nomi
       } else {
         showMessage("error", "Errore: " + result.message)
       }
@@ -269,7 +332,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (response.ok) {
         showMessage("success", result.message)
         toggleModal(editModal, false) // Chiudi il modale
-        fetchRecords() // Ricarica e renderizza i record
+        fetchRecords(currentNameFilter) // Ricarica e renderizza i record con il filtro corrente
+        populateNameFilter() // Aggiorna il filtro nomi
       } else {
         showMessage("error", "Errore: " + result.message)
       }
@@ -302,7 +366,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json()
         if (response.ok) {
           showMessage("success", result.message)
-          fetchRecords() // Ricarica e renderizza i record
+          fetchRecords(currentNameFilter) // Ricarica e renderizza i record con il filtro corrente
+          populateNameFilter() // Aggiorna il filtro nomi
         } else {
           showMessage("error", "Errore: " + result.message)
         }
@@ -350,8 +415,48 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Clicked outside deleteConfirmModal.")
       toggleModal(deleteConfirmModal, false)
     }
+    // Chiudi il dropdown del filtro se si clicca fuori
+    if (!filterDropdownContent.contains(event.target) && event.target !== filterDropdownButton) {
+      filterDropdownContent.classList.remove("show")
+      filterDropdownButton.classList.remove("active")
+    }
   })
 
-  // Recupero iniziale dei record al caricamento della pagina
+  // --- Gestione Filtri Personalizzati ---
+  filterDropdownButton.addEventListener("click", () => {
+    filterDropdownContent.classList.toggle("show")
+    filterDropdownButton.classList.toggle("active")
+  })
+
+  selectAllVehiclesCheckbox.addEventListener("change", (event) => {
+    const isChecked = event.target.checked
+    const allCheckboxes = vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]')
+    allCheckboxes.forEach((cb) => {
+      cb.checked = isChecked
+    })
+  })
+
+  applyFilterButton.addEventListener("click", () => {
+    const selectedNames = Array.from(vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]:checked')).map(
+      (cb) => cb.value,
+    )
+    fetchRecords(selectedNames)
+    filterDropdownContent.classList.remove("show") // Chiudi il dropdown dopo l'applicazione
+    filterDropdownButton.classList.remove("active")
+  })
+
+  clearFilterButton.addEventListener("click", () => {
+    selectAllVehiclesCheckbox.checked = false
+    const allCheckboxes = vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]')
+    allCheckboxes.forEach((cb) => {
+      cb.checked = false // Deseleziona tutte le opzioni
+    })
+    fetchRecords([]) // Richiama i record senza filtro
+    filterDropdownContent.classList.remove("show") // Chiudi il dropdown dopo la pulizia
+    filterDropdownButton.classList.remove("active")
+  })
+
+  // Recupero iniziale dei record e popolamento filtro al caricamento della pagina
   fetchRecords()
+  populateNameFilter()
 })

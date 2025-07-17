@@ -25,6 +25,31 @@
 
         <div class="card">
             <h2 class="card-title">Riepilogo Settimanale</h2>
+
+            <!-- Filtro per nome auto con tendina personalizzata e checkbox -->
+            <div class="filter-section">
+                <div class="form-group">
+                    <label>Filtra per Nome Auto</label>
+                    <div class="custom-select-container">
+                        <button type="button" id="filterDropdownButton" class="custom-select-button">
+                            Seleziona Veicoli <span class="arrow-down">&#9660;</span>
+                        </button>
+                        <div id="filterDropdownContent" class="custom-select-dropdown">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="selectAllVehicles"> Tutti i veicoli
+                            </label>
+                            <div id="vehicleOptionsContainer">
+                                <!-- Vehicle options with checkboxes will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="applyFilterButton">Applica Filtro</button>
+                    <button type="button" id="clearFilterButton" class="cancel-button">Pulisci Filtro</button>
+                </div>
+            </div>
+
             <div class="table-responsive">
                 <table class="data-table">
                     <thead>
