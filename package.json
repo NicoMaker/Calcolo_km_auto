@@ -4,7 +4,8 @@
   "description": "Applicazione Node.js, HTML, CSS, JS per tracciare KM e costi carburante.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev":"node --watch server.js"
   },
   "keywords": [],
   "author": "",
