@@ -283,6 +283,19 @@ document.addEventListener("DOMContentLoaded", () => {
     totalKilometersSpan.textContent = totalKilometers.toFixed(2)
     totalLitersConsumedSpan.textContent = totalLitersConsumed.toFixed(2)
     totalCostSpan.textContent = totalCost.toFixed(2)
+
+    // Calcolo km medi per settimana
+    // Prendo le settimane distinte dai record filtrati
+    const uniqueWeeks = new Set(records.map(r => r.week_identifier))
+    const numWeeks = uniqueWeeks.size
+    let avgKmPerWeek = 0
+    if (numWeeks > 0) {
+      avgKmPerWeek = totalKilometers / numWeeks
+    }
+    const avgKmPerWeekSpan = document.getElementById("avgKmPerWeek")
+    if (avgKmPerWeekSpan) {
+      avgKmPerWeekSpan.textContent = avgKmPerWeek.toFixed(2)
+    }
   }
 
   // --- Gestione Modal di Aggiunta ---
