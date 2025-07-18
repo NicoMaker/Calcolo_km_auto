@@ -98,6 +98,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearFilterButton = document.getElementById("clearFilterButton")
   let currentNameFilter = [] // Variabile per memorizzare il filtro attivo (ora un array)
 
+  // --- Barra di ricerca per i veicoli nel filtro ---
+  // Creo l'input solo una volta
+  let vehicleSearchInput = document.createElement("input")
+  vehicleSearchInput.type = "text"
+  vehicleSearchInput.placeholder = "Cerca veicolo..."
+  vehicleSearchInput.className = "vehicle-search-input"
+  vehicleSearchInput.style.margin = "8px 0"
+  // Inserisco la barra di ricerca sopra le opzioni veicoli
+  vehicleOptionsContainer.parentNode.insertBefore(vehicleSearchInput, vehicleOptionsContainer)
+
   // Force all modals to be hidden on load to prevent any stuck state
   addModal.style.display = "none"
   editModal.style.display = "none"
@@ -171,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Funzione per popolare il filtro a tendina con i nomi delle auto
+  let allVehicleNames = [] // Salva tutti i nomi per la ricerca
   async function populateNameFilter() {
     try {
       const response = await fetch("/api/names") // API per i nomi unici
@@ -178,35 +189,42 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       const names = await response.json()
-
-      vehicleOptionsContainer.innerHTML = "" // Pulisci le opzioni esistenti
-
-      names.forEach((name) => {
-        const label = document.createElement("label")
-        label.className = "checkbox-item"
-        const checkbox = document.createElement("input")
-        checkbox.type = "checkbox"
-        checkbox.value = name
-        checkbox.id = `filter-${name.replace(/\s/g, "-")}` // ID unico per la checkbox
-
-        // Pre-seleziona se il nome è nel filtro corrente
-        if (currentNameFilter.includes(name)) {
-          checkbox.checked = true
-        }
-
-        checkbox.addEventListener("change", updateSelectAllCheckbox)
-
-        label.appendChild(checkbox)
-        label.appendChild(document.createTextNode(name))
-        vehicleOptionsContainer.appendChild(label)
-      })
-
+      allVehicleNames = names // Salva per la ricerca
+      renderVehicleOptions(names)
       updateSelectAllCheckbox() // Aggiorna lo stato di "Seleziona tutti" dopo aver popolato
     } catch (error) {
       console.error("Errore nel recupero dei nomi per il filtro:", error)
       showMessage("error", "Errore nel caricamento dei filtri nome.")
     }
   }
+
+  // Funzione per renderizzare le opzioni veicolo filtrate
+  function renderVehicleOptions(names) {
+    vehicleOptionsContainer.innerHTML = "" // Pulisci le opzioni esistenti
+    names.forEach((name) => {
+      const label = document.createElement("label")
+      label.className = "checkbox-item"
+      const checkbox = document.createElement("input")
+      checkbox.type = "checkbox"
+      checkbox.value = name
+      checkbox.id = `filter-${name.replace(/\s/g, "-")}` // ID unico per la checkbox
+      if (currentNameFilter.includes(name)) {
+        checkbox.checked = true
+      }
+      checkbox.addEventListener("change", updateSelectAllCheckbox)
+      label.appendChild(checkbox)
+      label.appendChild(document.createTextNode(name))
+      vehicleOptionsContainer.appendChild(label)
+    })
+  }
+
+  // Event listener per la barra di ricerca
+  vehicleSearchInput.addEventListener("input", (e) => {
+    const search = e.target.value.trim().toLowerCase()
+    const filtered = allVehicleNames.filter((name) => name.toLowerCase().includes(search))
+    renderVehicleOptions(filtered)
+    updateSelectAllCheckbox()
+  })
 
   // Funzione per aggiornare lo stato della checkbox "Seleziona tutti"
   function updateSelectAllCheckbox() {
