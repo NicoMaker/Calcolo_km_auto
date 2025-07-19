@@ -285,7 +285,6 @@ document.addEventListener("DOMContentLoaded", () => {
     totalCostSpan.textContent = totalCost.toFixed(2)
 
     // Calcolo km medi per settimana
-    // Prendo le settimane distinte dai record filtrati
     const uniqueWeeks = new Set(records.map(r => r.week_identifier))
     const numWeeks = uniqueWeeks.size
     let avgKmPerWeek = 0
@@ -295,6 +294,50 @@ document.addEventListener("DOMContentLoaded", () => {
     const avgKmPerWeekSpan = document.getElementById("avgKmPerWeek")
     if (avgKmPerWeekSpan) {
       avgKmPerWeekSpan.textContent = avgKmPerWeek.toFixed(2)
+    }
+
+    // --- Statistiche Avanzate ---
+    // 1. KM medi per auto per settimana
+    // Raggruppo per veicolo e settimana
+    const kmPerCarPerWeek = {}
+    records.forEach(r => {
+      if (!kmPerCarPerWeek[r.name]) kmPerCarPerWeek[r.name] = {}
+      kmPerCarPerWeek[r.name][r.week_identifier] = (kmPerCarPerWeek[r.name][r.week_identifier] || 0) + r.kilometers
+    })
+    // Calcolo la media settimanale per ogni veicolo
+    const avgKmPerCarArr = Object.values(kmPerCarPerWeek).map(weeksObj => {
+      const weeks = Object.values(weeksObj)
+      if (weeks.length === 0) return 0
+      return weeks.reduce((a, b) => a + b, 0) / weeks.length
+    })
+    // Media tra i veicoli
+    let avgKmPerCarPerWeek = 0
+    if (avgKmPerCarArr.length > 0) {
+      avgKmPerCarPerWeek = avgKmPerCarArr.reduce((a, b) => a + b, 0) / avgKmPerCarArr.length
+    }
+    const avgKmPerCarPerWeekSpan = document.getElementById("avgKmPerCarPerWeek")
+    if (avgKmPerCarPerWeekSpan) {
+      avgKmPerCarPerWeekSpan.textContent = avgKmPerCarPerWeek.toFixed(2)
+    }
+
+    // 2. Litri medi per settimana
+    let avgLitersPerWeek = 0
+    if (numWeeks > 0) {
+      avgLitersPerWeek = totalLitersConsumed / numWeeks
+    }
+    const avgLitersPerWeekSpan = document.getElementById("avgLitersPerWeek")
+    if (avgLitersPerWeekSpan) {
+      avgLitersPerWeekSpan.textContent = avgLitersPerWeek.toFixed(2)
+    }
+
+    // 3. Costo medio per settimana
+    let avgCostPerWeek = 0
+    if (numWeeks > 0) {
+      avgCostPerWeek = totalCost / numWeeks
+    }
+    const avgCostPerWeekSpan = document.getElementById("avgCostPerWeek")
+    if (avgCostPerWeekSpan) {
+      avgCostPerWeekSpan.innerHTML = avgCostPerWeek.toFixed(2) + "&nbsp;&euro;"
     }
   }
 
