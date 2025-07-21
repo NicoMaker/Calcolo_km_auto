@@ -740,3 +740,27 @@ button.red:hover {
     padding: 1rem 0.5rem;
   }
 }
+
+.table-fixed-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  margin-top: 18px;
+  background: #fff;
+}
+
+.table-fixed-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-fixed-scroll th, .table-fixed-scroll td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.table-fixed-scroll tbody tr:last-child td {
+  border-bottom: none;
+}

@@ -154,6 +154,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3000)
   }
 
+  // --- Variabile per tracciare l'ultimo stato dei dati ---
+  let lastRecordsHash = null
+
+  // Funzione per calcolare un hash semplice dei dati (per rilevare cambiamenti)
+  function hashRecords(records) {
+    return JSON.stringify(records.map(r => ({
+      id: r.id,
+      kilometers: r.kilometers,
+      fuel_price_per_liter: r.fuel_price_per_liter,
+      calculated_cost: r.calculated_cost
+    })))
+  }
+
   // Funzione per recuperare i record dal server con filtro
   async function fetchRecords(nameFilters = currentNameFilter) {
     console.log(`Fetching records with filters: "${nameFilters.join(", ")}"`) // LOG 5: Traccia il recupero dati
@@ -171,6 +184,11 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       const records = await response.json()
+      const newHash = hashRecords(records)
+      if (lastRecordsHash !== null && lastRecordsHash !== newHash) {
+        showMessage("success", "Dati aggiornati!")
+      }
+      lastRecordsHash = newHash
       renderRecords(records)
       updateTotals(records) // Aggiorna i totali con i record filtrati
       console.log("Records fetched and rendered successfully.") // LOG 6: Conferma recupero
@@ -584,4 +602,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Recupero iniziale dei record e popolamento filtro al caricamento della pagina
   fetchRecords()
   populateNameFilter()
+
+  // Aggiornamento automatico ogni 2 secondi dei record (polling)
+  setInterval(() => {
+    fetchRecords(currentNameFilter)
+  }, 2000)
 })

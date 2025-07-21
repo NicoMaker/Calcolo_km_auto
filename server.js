@@ -36,14 +36,15 @@ async function initializeDatabase() {
 
 app.get("/api/fuel-price", (req, res) => {
   const fuelType = req.query.fuelType?.toLowerCase()
-  let price = 1.5
-  switch (fuelType) {
-    case "benzina": price = 1.85; break
-    case "diesel": price = 1.7; break
-    case "gpl": price = 0.8; break
-    case "metano": price = 1.3; break
-    case "elettrico": price = 0.25; break
+  const pricesPath = path.join(__dirname, "public", "fuel-prices.json")
+  let prices = {}
+  try {
+    prices = JSON.parse(fs.readFileSync(pricesPath, "utf8"))
+  } catch (e) {
+    return res.status(500).json({ message: "Errore lettura prezzi carburante." })
   }
+  let price = prices[fuelType]
+  if (typeof price !== "number") price = 1.5
   res.json({ price })
 })
 
@@ -84,7 +85,30 @@ app.get("/api/records", (req, res) => {
     `
 
     const records = db.prepare(sql).all(...params)
-    res.json(records)
+
+    // Leggi i prezzi attuali
+    const pricesPath = path.join(__dirname, "public", "fuel-prices.json")
+    let prices = {}
+    try {
+      prices = JSON.parse(fs.readFileSync(pricesPath, "utf8"))
+    } catch (e) {
+      return res.status(500).json({ message: "Errore lettura prezzi carburante." })
+    }
+
+    // Ricalcola liters_consumed e calculated_cost con i prezzi attuali
+    const updatedRecords = records.map(r => {
+      const price = prices[r.fuel_type?.toLowerCase()] ?? 1.5
+      const liters = r.kilometers / r.fuel_efficiency_km_per_liter
+      const cost = liters * price
+      return {
+        ...r,
+        liters_consumed: liters,
+        calculated_cost: cost,
+        fuel_price_per_liter: price
+      }
+    })
+
+    res.json(updatedRecords)
   } catch (error) {
     res.status(500).json({ message: "Errore nel recupero dei record." })
   }

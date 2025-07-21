@@ -51,24 +51,25 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Settimana</th>
-                            <th>KM</th>
-                            <th>Carburante</th>
-                            <th>Prezzo/L</th>
-                            <th>Litri Consumati</th>
-                            <th>Costo Settimanale</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recordsTableBody">
-                        <!-- Records will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
+            <!-- Tabella dei record con blocco scrollabile -->
+            <div class="table-fixed-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Settimana</th>
+                    <th>KM</th>
+                    <th>Carburante</th>
+                    <th>Prezzo/L</th>
+                    <th>Litri Consumati</th>
+                    <th>Costo Settimanale</th>
+                    <th>Azioni</th>
+                  </tr>
+                </thead>
+                <tbody id="recordsTableBody">
+                  <!-- Records will be inserted here by JavaScript -->
+                </tbody>
+              </table>
             </div>
             <p id="noRecordsMessage" class="no-records-message">Nessun record trovato. Inizia aggiungendone uno!</p>
             <div class="totals">
