@@ -175,24 +175,47 @@ app.put("/api/records/:id", async (req, res) => {
   res.json({ message: "Record aggiornato con successo!" })
 })
 
+app.delete("/api/records/:id", (req, res) => {
+  const id = req.params.id
+  try {
+    const stmt = db.prepare("DELETE FROM weekly_records WHERE id = ?")
+    const result = stmt.run(id)
+
+    if (result.changes === 0) {
+      return res.status(404).json({ message: "Record non trovato." })
+    }
+
+    res.json({ message: "Record eliminato con successo!" })
+  } catch (error) {
+    console.error("Errore eliminazione:", error)
+    res.status(500).json({ message: "Errore durante l'eliminazione del record." })
+  }
+})
+
 app.delete("/api/records", (req, res) => {
   try {
     let names = req.query.name
     let sql = `DELETE FROM weekly_records`
     const params = []
+
     if (names) {
       if (!Array.isArray(names)) names = [names]
       const placeholders = names.map(() => "?").join(", ")
       sql += ` WHERE name IN (${placeholders})`
       params.push(...names)
     }
+
     const stmt = db.prepare(sql)
     const info = stmt.run(...params)
+
     res.json({ message: `Eliminati ${info.changes} record.` })
   } catch (error) {
-    res.status(500).json({ message: "Errore nell'eliminazione dei record." })
+    console.error("Errore nell'eliminazione dei record:", error)
+    res.status(500).json({ message: "Errore durante l'eliminazione dei record." })
   }
 })
+
+
 // Avvio
 initializeDatabase().then(() => {
   app.listen(PORT, () => {
