@@ -764,3 +764,15 @@ button.red:hover {
 .table-fixed-scroll tbody tr:last-child td {
   border-bottom: none;
 }
+
+input{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  font-size: 1em;
+  color: var(--text-dark);
+  background-color: var(--input-background);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
