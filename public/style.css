@@ -776,3 +776,7 @@ input{
   background-color: var(--input-background);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
+
+.vehicle-search-input{
+  display: none;
+}
