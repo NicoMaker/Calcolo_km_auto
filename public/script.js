@@ -422,19 +422,19 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   // --- Gestione Modal di Modifica ---
-function handleEdit(id, records) {
-  const recordToEdit = records.find((r) => r.id === Number(id))
-  if (recordToEdit) {
-    editIdInput.value = recordToEdit.id
-    editNameInput.value = recordToEdit.name
-    editWeekIdentifierInput.value = recordToEdit.week_identifier
-    editKilometersInput.value = recordToEdit.kilometers
-    editFuelEfficiencyInput.value = recordToEdit.fuel_efficiency_km_per_liter
-    // ✅ Normalizza carburante in lowercase per combaciare con le <option value="">
-    editFuelTypeSelect.value = recordToEdit.fuel_type.toLowerCase()
-    toggleModal(editModal, true)
+  function handleEdit(id, records) {
+    const recordToEdit = records.find((r) => r.id === Number(id))
+    if (recordToEdit) {
+      editIdInput.value = recordToEdit.id
+      editNameInput.value = recordToEdit.name
+      editWeekIdentifierInput.value = recordToEdit.week_identifier
+      editKilometersInput.value = recordToEdit.kilometers
+      editFuelEfficiencyInput.value = recordToEdit.fuel_efficiency_km_per_liter
+      // ✅ Normalizza carburante in lowercase per combaciare con le <option value="">
+      editFuelTypeSelect.value = recordToEdit.fuel_type.toLowerCase()
+      toggleModal(editModal, true)
+    }
   }
-}
 
   editRecordForm.addEventListener("submit", async (event) => {
     event.preventDefault()
