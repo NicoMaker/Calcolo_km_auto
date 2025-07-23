@@ -86,7 +86,6 @@ app.get("/api/records", (req, res) => {
 
     const records = db.prepare(sql).all(...params)
 
-    // Leggi i prezzi attuali
     const pricesPath = path.join(__dirname, "public", "fuel-prices.json")
     let prices = {}
     try {
@@ -95,16 +94,15 @@ app.get("/api/records", (req, res) => {
       return res.status(500).json({ message: "Errore lettura prezzi carburante." })
     }
 
-    // Ricalcola liters_consumed e calculated_cost con i prezzi attuali
     const updatedRecords = records.map(r => {
       const price = prices[r.fuel_type?.toLowerCase()] ?? 1.5
       const liters = r.kilometers / r.fuel_efficiency_km_per_liter
       const cost = liters * price
       return {
         ...r,
+        fuel_price_per_liter: price,
         liters_consumed: liters,
-        calculated_cost: cost,
-        fuel_price_per_liter: price
+        calculated_cost: cost
       }
     })
 
@@ -120,32 +118,26 @@ app.post("/api/records", async (req, res) => {
     return res.status(400).json({ message: "Tutti i campi sono obbligatori." })
   }
 
-  const fuelRes = await fetch(`http://localhost:${PORT}/api/fuel-price?fuelType=${fuelType}`)
-  if (!fuelRes.ok) return res.status(500).json({ message: "Errore nel prezzo carburante." })
+  // Capitalizza il tipo carburante prima di salvare nel DB
+  const fuelTypeCapitalized = fuelType.charAt(0).toUpperCase() + fuelType.slice(1).toLowerCase()
 
-  const { price: fuelPricePerLiter } = await fuelRes.json()
   const existing = db.prepare("SELECT * FROM weekly_records WHERE name = ? AND week_identifier = ?").get(name, weekIdentifier)
 
   if (existing) {
     const newKm = existing.kilometers + kilometers
-    const newLiters = newKm / existing.fuel_efficiency_km_per_liter
-    const newCost = newLiters * existing.fuel_price_per_liter
     db.prepare(`
       UPDATE weekly_records SET 
-        kilometers = ?, liters_consumed = ?, calculated_cost = ?, updated_at = CURRENT_TIMESTAMP 
+        kilometers = ?, updated_at = CURRENT_TIMESTAMP 
       WHERE id = ?
-    `).run(newKm, newLiters, newCost, existing.id)
+    `).run(newKm, existing.id)
     return res.json({ message: "Record aggiornato con successo (KM sommati)!" })
   }
 
-  const liters = kilometers / fuelEfficiency
-  const cost = liters * fuelPricePerLiter
-
   db.prepare(`
     INSERT INTO weekly_records 
-      (name, week_identifier, kilometers, fuel_efficiency_km_per_liter, fuel_type, fuel_price_per_liter, liters_consumed, calculated_cost) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(name, weekIdentifier, kilometers, fuelEfficiency, fuelType, fuelPricePerLiter, liters, cost)
+      (name, week_identifier, kilometers, fuel_efficiency_km_per_liter, fuel_type) 
+    VALUES (?, ?, ?, ?, ?)
+  `).run(name, weekIdentifier, kilometers, fuelEfficiency, fuelTypeCapitalized)
 
   res.json({ message: "Nuovo record salvato con successo!" })
 })
@@ -157,20 +149,14 @@ app.put("/api/records/:id", async (req, res) => {
     return res.status(400).json({ message: "Tutti i campi sono obbligatori." })
   }
 
-  const fuelRes = await fetch(`http://localhost:${PORT}/api/fuel-price?fuelType=${fuelType}`)
-  if (!fuelRes.ok) return res.status(500).json({ message: "Errore nel prezzo carburante." })
-
-  const { price: fuelPricePerLiter } = await fuelRes.json()
-  const liters = kilometers / fuelEfficiency
-  const cost = liters * fuelPricePerLiter
+  const fuelTypeCapitalized = fuelType.charAt(0).toUpperCase() + fuelType.slice(1).toLowerCase()
 
   db.prepare(`
     UPDATE weekly_records SET 
       name = ?, week_identifier = ?, kilometers = ?, fuel_efficiency_km_per_liter = ?, 
-      fuel_type = ?, fuel_price_per_liter = ?, liters_consumed = ?, calculated_cost = ?, 
-      updated_at = CURRENT_TIMESTAMP 
+      fuel_type = ?, updated_at = CURRENT_TIMESTAMP 
     WHERE id = ?
-  `).run(name, weekIdentifier, kilometers, fuelEfficiency, fuelType, fuelPricePerLiter, liters, cost, id)
+  `).run(name, weekIdentifier, kilometers, fuelEfficiency, fuelTypeCapitalized, id)
 
   res.json({ message: "Record aggiornato con successo!" })
 })
@@ -215,8 +201,7 @@ app.delete("/api/records", (req, res) => {
   }
 })
 
-
-// Avvio
+// Avvio server
 initializeDatabase().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 Server in esecuzione su http://localhost:${PORT}`)
