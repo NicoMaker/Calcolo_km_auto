@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      const names = await response.json()
+      const names = (await response.json()).sort((a, b) => a.localeCompare(b)) // ORDINAMENTO A-Z
       allVehicleNames = names // Salva per la ricerca
       renderVehicleOptions(names)
       updateSelectAllCheckbox() // Aggiorna lo stato di "Seleziona tutti" dopo aver popolato
@@ -215,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showMessage("error", "Errore nel caricamento dei filtri nome.")
     }
   }
+
 
   // Funzione per renderizzare le opzioni veicolo filtrate
   function renderVehicleOptions(names) {
