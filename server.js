@@ -150,23 +150,50 @@ app.post("/api/records", async (req, res) => {
 })
 
 app.put("/api/records/:id", async (req, res) => {
-  const id = req.params.id
-  const { name, weekIdentifier, kilometers, fuelEfficiency, fuelType } = req.body
+  const id = req.params.id;
+  const { name, weekIdentifier, kilometers, fuelEfficiency, fuelType } = req.body;
+
   if (!name || !weekIdentifier || isNaN(kilometers) || isNaN(fuelEfficiency) || !fuelType) {
-    return res.status(400).json({ message: "Tutti i campi sono obbligatori." })
+    return res.status(400).json({ message: "Tutti i campi sono obbligatori." });
   }
 
-  const fuelTypeCapitalized = fuelType.charAt(0).toUpperCase() + fuelType.slice(1).toLowerCase()
+  const fuelTypeCapitalized = fuelType.charAt(0).toUpperCase() + fuelType.slice(1).toLowerCase();
 
+  const existingRecord = db.prepare("SELECT * FROM weekly_records WHERE id = ?").get(id);
+  if (!existingRecord) {
+    return res.status(404).json({ message: "Record da modificare non trovato." });
+  }
+
+  const targetRecord = db.prepare(`
+    SELECT * FROM weekly_records WHERE name = ? AND week_identifier = ? AND id != ?
+  `).get(name, weekIdentifier, id);
+
+  if (targetRecord) {
+    // Somma i km al record target ed elimina quello originale
+    const newKm = targetRecord.kilometers + kilometers;
+    db.prepare(`
+      UPDATE weekly_records SET 
+        kilometers = ?, updated_at = CURRENT_TIMESTAMP 
+      WHERE id = ?
+    `).run(newKm, targetRecord.id);
+
+    // Elimina il record originale
+    db.prepare("DELETE FROM weekly_records WHERE id = ?").run(id);
+
+    return res.json({ message: "Record unificato con record esistente: KM sommati e record originale rimosso." });
+  }
+
+  // Se nessun record duplicato esiste, aggiorna normalmente
   db.prepare(`
     UPDATE weekly_records SET 
       name = ?, week_identifier = ?, kilometers = ?, fuel_efficiency_km_per_liter = ?, 
       fuel_type = ?, updated_at = CURRENT_TIMESTAMP 
     WHERE id = ?
-  `).run(name, weekIdentifier, kilometers, fuelEfficiency, fuelTypeCapitalized, id)
+  `).run(name, weekIdentifier, kilometers, fuelEfficiency, fuelTypeCapitalized, id);
 
-  res.json({ message: "Record aggiornato con successo!" })
-})
+  res.json({ message: "Record aggiornato con successo!" });
+});
+
 
 app.delete("/api/records/:id", (req, res) => {
   const id = req.params.id
