@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <!-- Link a Google Fonts per un font moderno (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <!-- Area per i messaggi di notifica -->
@@ -16,7 +18,7 @@
         <div class="card">
             <h1 class="card-title">Tracciatore KM Settimanali</h1>
             <p class="card-description">Registra i tuoi chilometri e calcola i costi e il consumo di carburante.</p>
-            
+
             <!-- Pulsante per aprire il modale di aggiunta -->
             <div class="form-actions add-record-button-container">
                 <button type="button" id="openAddModalButton">Aggiungi Nuovo Record</button>
@@ -47,29 +49,30 @@
                 <div class="form-actions">
                     <button type="button" id="applyFilterButton">Applica Filtro</button>
                     <button type="button" id="clearFilterButton" class="cancel-button">Pulisci Filtro</button>
-                    <button type="button" id="deleteAllButton" class="delete-btn delete-all-btn">Elimina Tutti i Filtrati</button>
+                    <button type="button" id="deleteAllButton" class="delete-btn delete-all-btn">Elimina Tutti i
+                        Filtrati</button>
                 </div>
             </div>
 
             <!-- Tabella dei record con blocco scrollabile -->
             <div class="table-fixed-scroll">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>Settimana</th>
-                    <th>KM</th>
-                    <th>Carburante</th>
-                    <th>Prezzo/L</th>
-                    <th>Litri Consumati</th>
-                    <th>Costo Settimanale</th>
-                    <th>Azioni</th>
-                  </tr>
-                </thead>
-                <tbody id="recordsTableBody">
-                  <!-- Records will be inserted here by JavaScript -->
-                </tbody>
-              </table>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Settimana</th>
+                            <th>KM</th>
+                            <th>Carburante</th>
+                            <th>Prezzo/L</th>
+                            <th>Litri Consumati</th>
+                            <th>Costo Settimanale</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTableBody">
+                        <!-- Records will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
             </div>
             <p id="noRecordsMessage" class="no-records-message">Nessun record trovato. Inizia aggiungendone uno!</p>
             <div class="totals">
@@ -110,19 +113,23 @@
                 </div>
                 <div class="form-group">
                     <label for="addWeekIdentifier">Settimana (es. 2025-W28)</label>
-                    <input type="text" id="addWeekIdentifier" name="weekIdentifier" placeholder="Anno-Settimana (es. 2025-W01)" required>
+                    <input type="text" id="addWeekIdentifier" name="weekIdentifier"
+                        placeholder="Anno-Settimana (es. 2025-W01)" required>
                 </div>
                 <div class="form-group">
                     <label for="addKilometers">KM Percorsi</label>
-                    <input type="number" step="0.01" id="addKilometers" name="kilometers" placeholder="Es. 150.50" required>
+                    <input type="number" step="0.01" id="addKilometers" name="kilometers" placeholder="Es. 150.50"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="addFuelEfficiency">KM per Litro</label>
-                    <input type="number" step="0.01" id="addFuelEfficiency" name="fuelEfficiency" placeholder="Es. 18.2" required>
+                    <input type="number" step="0.01" id="addFuelEfficiency" name="fuelEfficiency" placeholder="Es. 18.2"
+                        required>
                 </div>
                 <div class="form-group full-width">
                     <label for="addFuelType">Tipo Carburante</label>
                     <select id="addFuelType" name="fuelType" required>
+                        <option value="" disabled selected>Seleziona un tipo di alimentazione</option>
                         <option value="benzina">Benzina</option>
                         <option value="diesel">Diesel</option>
                         <option value="gpl">GPL</option>
@@ -150,15 +157,18 @@
                 </div>
                 <div class="form-group">
                     <label for="editWeekIdentifier">Settimana (es. 2025-W28)</label>
-                    <input type="text" id="editWeekIdentifier" name="weekIdentifier" placeholder="Anno-Settimana (es. 2025-W01)" required>
+                    <input type="text" id="editWeekIdentifier" name="weekIdentifier"
+                        placeholder="Anno-Settimana (es. 2025-W01)" required>
                 </div>
                 <div class="form-group">
                     <label for="editKilometers">KM Percorsi</label>
-                    <input type="number" step="0.01" id="editKilometers" name="kilometers" placeholder="Es. 150.50" required>
+                    <input type="number" step="0.01" id="editKilometers" name="kilometers" placeholder="Es. 150.50"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="editFuelEfficiency">KM per Litro</label>
-                    <input type="number" step="0.01" id="editFuelEfficiency" name="fuelEfficiency" placeholder="Es. 18.2" required>
+                    <input type="number" step="0.01" id="editFuelEfficiency" name="fuelEfficiency"
+                        placeholder="Es. 18.2" required>
                 </div>
                 <div class="form-group full-width">
                     <label for="editFuelType">Tipo Carburante</label>
@@ -203,4 +213,5 @@
 
     <script src="/script.js"></script>
 </body>
+
 </html>
