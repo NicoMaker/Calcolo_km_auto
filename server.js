@@ -5,7 +5,6 @@ const Database = require("better-sqlite3")
 const app = express()
 
 const PORT = process.env.PORT || 3000
-const PUBLIC_DIR = path.join(__dirname, "public")
 let db
 
 app.use(express.json())
