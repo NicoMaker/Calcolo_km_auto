@@ -1,268 +1,295 @@
-console.log("JS caricato!")
+console.log("JS caricato!");
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOMContentLoaded event fired.") // LOG 2: Verifica che il DOM sia pronto
+  console.log("DOMContentLoaded event fired."); // LOG 2: Verifica che il DOM sia pronto
 
-  const recordsTableBody = document.getElementById("recordsTableBody")
-  const totalKilometersSpan = document.getElementById("totalKilometers")
-  const totalLitersConsumedSpan = document.getElementById("totalLitersConsumed")
-  const totalCostSpan = document.getElementById("totalCost")
-  const noRecordsMessage = document.getElementById("noRecordsMessage")
-  const messageArea = document.getElementById("messageArea")
+  const recordsTableBody = document.getElementById("recordsTableBody");
+  const totalKilometersSpan = document.getElementById("totalKilometers");
+  const totalLitersConsumedSpan = document.getElementById(
+    "totalLitersConsumed",
+  );
+  const totalCostSpan = document.getElementById("totalCost");
+  const noRecordsMessage = document.getElementById("noRecordsMessage");
+  const messageArea = document.getElementById("messageArea");
 
   // Elementi del Modal di Aggiunta
-  const addModal = document.getElementById("addModal")
-  const openAddModalButton = document.getElementById("openAddModalButton")
-  const addRecordForm = document.getElementById("addRecordForm")
-  const addSubmitButton = document.getElementById("addSubmitButton")
-  const addNameInput = document.getElementById("addName")
-  const addWeekIdentifierInput = document.getElementById("addWeekIdentifier")
-  const addKilometersInput = document.getElementById("addKilometers")
-  const addFuelEfficiencyInput = document.getElementById("addFuelEfficiency")
-  const addFuelTypeSelect = document.getElementById("addFuelType")
+  const addModal = document.getElementById("addModal");
+  const openAddModalButton = document.getElementById("openAddModalButton");
+  const addRecordForm = document.getElementById("addRecordForm");
+  const addSubmitButton = document.getElementById("addSubmitButton");
+  const addNameInput = document.getElementById("addName");
+  const addWeekIdentifierInput = document.getElementById("addWeekIdentifier");
+  const addKilometersInput = document.getElementById("addKilometers");
+  const addFuelEfficiencyInput = document.getElementById("addFuelEfficiency");
+  const addFuelTypeSelect = document.getElementById("addFuelType");
 
   // Elementi del Modal di Modifica
-  const editModal = document.getElementById("editModal")
-  const editRecordForm = document.getElementById("editRecordForm")
-  const updateButton = document.getElementById("updateButton")
-  const editIdInput = document.getElementById("editId")
-  const editNameInput = document.getElementById("editName")
-  const editWeekIdentifierInput = document.getElementById("editWeekIdentifier")
-  const editKilometersInput = document.getElementById("editKilometers")
-  const editFuelEfficiencyInput = document.getElementById("editFuelEfficiency")
-  const editFuelTypeSelect = document.getElementById("editFuelType")
+  const editModal = document.getElementById("editModal");
+  const editRecordForm = document.getElementById("editRecordForm");
+  const updateButton = document.getElementById("updateButton");
+  const editIdInput = document.getElementById("editId");
+  const editNameInput = document.getElementById("editName");
+  const editWeekIdentifierInput = document.getElementById("editWeekIdentifier");
+  const editKilometersInput = document.getElementById("editKilometers");
+  const editFuelEfficiencyInput = document.getElementById("editFuelEfficiency");
+  const editFuelTypeSelect = document.getElementById("editFuelType");
 
   // Elementi del Modal di Conferma Eliminazione
-  const deleteConfirmModal = document.getElementById("deleteConfirmModal")
-  const confirmDeleteButton = document.getElementById("confirmDeleteButton")
-  const cancelDeleteButton = document.getElementById("cancelDeleteButton")
-  let recordToDeleteId = null // Variabile per memorizzare l'ID da eliminare
+  const deleteConfirmModal = document.getElementById("deleteConfirmModal");
+  const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+  const cancelDeleteButton = document.getElementById("cancelDeleteButton");
+  let recordToDeleteId = null; // Variabile per memorizzare l'ID da eliminare
 
   // Elementi del Modal di Conferma Eliminazione Multipla
-  const deleteAllConfirmModal = document.getElementById("deleteAllConfirmModal")
-  const deleteAllConfirmText = document.getElementById("deleteAllConfirmText")
-  const confirmDeleteAllButton = document.getElementById("confirmDeleteAllButton")
-  const cancelDeleteAllButton = document.getElementById("cancelDeleteAllButton")
+  const deleteAllConfirmModal = document.getElementById(
+    "deleteAllConfirmModal",
+  );
+  const deleteAllConfirmText = document.getElementById("deleteAllConfirmText");
+  const confirmDeleteAllButton = document.getElementById(
+    "confirmDeleteAllButton",
+  );
+  const cancelDeleteAllButton = document.getElementById(
+    "cancelDeleteAllButton",
+  );
 
   // Bottone elimina tutti/filtrati
-  const deleteAllButton = document.getElementById("deleteAllButton")
-  let deleteAllMode = "filtered" // "filtered" o "all"
+  const deleteAllButton = document.getElementById("deleteAllButton");
+  let deleteAllMode = "filtered"; // "filtered" o "all"
   deleteAllButton.addEventListener("click", () => {
     if (currentNameFilter.length === 0) {
-      deleteAllConfirmText.textContent = "Sei sicuro di voler eliminare TUTTI i record? Questa azione non può essere annullata.";
-      deleteAllMode = "all"
+      deleteAllConfirmText.textContent =
+        "Sei sicuro di voler eliminare TUTTI i record? Questa azione non può essere annullata.";
+      deleteAllMode = "all";
     } else {
-      deleteAllConfirmText.textContent = "Sei sicuro di voler eliminare tutti i record filtrati? Questa azione non può essere annullata.";
-      deleteAllMode = "filtered"
+      deleteAllConfirmText.textContent =
+        "Sei sicuro di voler eliminare tutti i record filtrati? Questa azione non può essere annullata.";
+      deleteAllMode = "filtered";
     }
-    toggleModal(deleteAllConfirmModal, true)
-  })
+    toggleModal(deleteAllConfirmModal, true);
+  });
 
   confirmDeleteAllButton.addEventListener("click", async () => {
-    confirmDeleteAllButton.disabled = true
-    confirmDeleteAllButton.textContent = "Eliminazione..."
+    confirmDeleteAllButton.disabled = true;
+    confirmDeleteAllButton.textContent = "Eliminazione...";
     try {
-      let url = "/api/records"
+      let url = "/api/records";
       if (deleteAllMode === "filtered") {
-        const queryParams = currentNameFilter.map((name) => `name=${encodeURIComponent(name)}`).join("&")
-        url += `?${queryParams}`
+        const queryParams = currentNameFilter
+          .map((name) => `name=${encodeURIComponent(name)}`)
+          .join("&");
+        url += `?${queryParams}`;
       }
-      const response = await fetch(url, { method: "DELETE" })
-      const result = await response.json()
+      const response = await fetch(url, { method: "DELETE" });
+      const result = await response.json();
       if (response.ok) {
-        showMessage("success", result.message)
-        fetchRecords(currentNameFilter)
-        populateNameFilter()
+        showMessage("success", result.message);
+        fetchRecords(currentNameFilter);
+        populateNameFilter();
       } else {
-        showMessage("error", "Errore: " + result.message)
+        showMessage("error", "Errore: " + result.message);
       }
     } catch (error) {
-      showMessage("error", "Errore durante l'eliminazione dei record.")
+      showMessage("error", "Errore durante l'eliminazione dei record.");
     } finally {
-      toggleModal(deleteAllConfirmModal, false)
-      confirmDeleteAllButton.disabled = false
-      confirmDeleteAllButton.textContent = "Elimina"
+      toggleModal(deleteAllConfirmModal, false);
+      confirmDeleteAllButton.disabled = false;
+      confirmDeleteAllButton.textContent = "Elimina";
     }
-  })
+  });
 
   cancelDeleteAllButton.addEventListener("click", () => {
-    toggleModal(deleteAllConfirmModal, false)
-  })
+    toggleModal(deleteAllConfirmModal, false);
+  });
 
   // Elementi del Filtro Personalizzato
-  const filterDropdownButton = document.getElementById("filterDropdownButton")
-  const filterDropdownContent = document.getElementById("filterDropdownContent")
-  const selectAllVehiclesCheckbox = document.getElementById("selectAllVehicles")
-  const vehicleOptionsContainer = document.getElementById("vehicleOptionsContainer")
-  const applyFilterButton = document.getElementById("applyFilterButton")
-  const clearFilterButton = document.getElementById("clearFilterButton")
-  let currentNameFilter = [] // Variabile per memorizzare il filtro attivo (ora un array)
+  const filterDropdownButton = document.getElementById("filterDropdownButton");
+  const filterDropdownContent = document.getElementById(
+    "filterDropdownContent",
+  );
+  const selectAllVehiclesCheckbox =
+    document.getElementById("selectAllVehicles");
+  const vehicleOptionsContainer = document.getElementById(
+    "vehicleOptionsContainer",
+  );
+  const applyFilterButton = document.getElementById("applyFilterButton");
+  const clearFilterButton = document.getElementById("clearFilterButton");
+  let currentNameFilter = []; // Variabile per memorizzare il filtro attivo (ora un array)
 
   // --- Barra di ricerca per i veicoli nel filtro ---
   // Creo l'input solo una volta
-  let vehicleSearchInput = document.createElement("input")
-  vehicleSearchInput.type = "text"
-  vehicleSearchInput.placeholder = "Cerca veicolo..."
-  vehicleSearchInput.className = "vehicle-search-input"
-  vehicleSearchInput.style.margin = "8px 0"
+  let vehicleSearchInput = document.createElement("input");
+  vehicleSearchInput.type = "text";
+  vehicleSearchInput.placeholder = "Cerca veicolo...";
+  vehicleSearchInput.className = "vehicle-search-input";
+  vehicleSearchInput.style.margin = "8px 0";
   // Inserisco la barra di ricerca sopra le opzioni veicoli
-  vehicleOptionsContainer.parentNode.insertBefore(vehicleSearchInput, vehicleOptionsContainer)
+  vehicleOptionsContainer.parentNode.insertBefore(
+    vehicleSearchInput,
+    vehicleOptionsContainer,
+  );
 
   // Force all modals to be hidden on load to prevent any stuck state
-  addModal.style.display = "none"
-  editModal.style.display = "none"
-  deleteConfirmModal.style.display = "none"
-  addModal.classList.remove("active")
-  editModal.classList.remove("active")
-  deleteConfirmModal.classList.remove("active")
-  console.log("All modals forced to hidden state on DOMContentLoaded.") // NEW LOG
+  addModal.style.display = "none";
+  editModal.style.display = "none";
+  deleteConfirmModal.style.display = "none";
+  addModal.classList.remove("active");
+  editModal.classList.remove("active");
+  deleteConfirmModal.classList.remove("active");
+  console.log("All modals forced to hidden state on DOMContentLoaded."); // NEW LOG
 
   // Funzione per mostrare/nascondere i modali
   function toggleModal(modalElement, show) {
-    console.log(`Toggling modal: ${modalElement.id}, show: ${show}`) // LOG 3: Traccia l'apertura/chiusura dei modali
+    console.log(`Toggling modal: ${modalElement.id}, show: ${show}`); // LOG 3: Traccia l'apertura/chiusura dei modali
     if (show) {
-      modalElement.style.display = "flex" // Rendi visibile per il layout
+      modalElement.style.display = "flex"; // Rendi visibile per il layout
       // Piccolo ritardo per permettere a display:flex di applicarsi prima della transizione di opacità
       setTimeout(() => {
-        modalElement.classList.add("active") // Aggiungi la classe active per la transizione di opacità/trasformazione
-      }, 10)
+        modalElement.classList.add("active"); // Aggiungi la classe active per la transizione di opacità/trasformazione
+      }, 10);
     } else {
-      modalElement.classList.remove("active") // Avvia la transizione di opacità/trasformazione
+      modalElement.classList.remove("active"); // Avvia la transizione di opacità/trasformazione
       // Per il debug, imposta immediatamente display a none.
       // Se questo risolve il problema, l'errore era nella gestione di transitionend o opacity.
-      modalElement.style.display = "none"
+      modalElement.style.display = "none";
     }
   }
 
   // Funzione per mostrare messaggi di notifica
   function showMessage(type, message) {
-    console.log(`Showing message: ${type} - ${message}`) // LOG 4: Traccia i messaggi
-    const messageDiv = document.createElement("div")
-    messageDiv.className = `message ${type}`
-    messageDiv.textContent = message
-    messageArea.appendChild(messageDiv)
+    console.log(`Showing message: ${type} - ${message}`); // LOG 4: Traccia i messaggi
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${type}`;
+    messageDiv.textContent = message;
+    messageArea.appendChild(messageDiv);
 
     // Mostra il messaggio con un'animazione
     setTimeout(() => {
-      messageDiv.classList.add("show")
-    }, 10) // Piccolo ritardo per attivare la transizione CSS
+      messageDiv.classList.add("show");
+    }, 10); // Piccolo ritardo per attivare la transizione CSS
 
     // Nascondi il messaggio dopo 3 secondi
     setTimeout(() => {
-      messageDiv.classList.remove("show")
-      messageDiv.addEventListener("transitionend", () => messageDiv.remove())
-    }, 3000)
+      messageDiv.classList.remove("show");
+      messageDiv.addEventListener("transitionend", () => messageDiv.remove());
+    }, 3000);
   }
 
   // --- Variabile per tracciare l'ultimo stato dei dati ---
-  let lastRecordsHash = null
+  let lastRecordsHash = null;
 
   // Funzione per calcolare un hash semplice dei dati (per rilevare cambiamenti)
   function hashRecords(records) {
-    return JSON.stringify(records.map(r => ({
-      id: r.id,
-      kilometers: r.kilometers,
-      fuel_price_per_liter: r.fuel_price_per_liter,
-      calculated_cost: r.calculated_cost
-    })))
+    return JSON.stringify(
+      records.map((r) => ({
+        id: r.id,
+        kilometers: r.kilometers,
+        fuel_price_per_liter: r.fuel_price_per_liter,
+        calculated_cost: r.calculated_cost,
+      })),
+    );
   }
 
   // Funzione per recuperare i record dal server con filtro
   async function fetchRecords(nameFilters = currentNameFilter) {
-    console.log(`Fetching records with filters: "${nameFilters.join(", ")}"`) // LOG 5: Traccia il recupero dati
-    currentNameFilter = nameFilters // Aggiorna il filtro corrente
+    console.log(`Fetching records with filters: "${nameFilters.join(", ")}"`); // LOG 5: Traccia il recupero dati
+    currentNameFilter = nameFilters; // Aggiorna il filtro corrente
 
-    let url = "/api/records"
+    let url = "/api/records";
     if (nameFilters && nameFilters.length > 0) {
-      const queryParams = nameFilters.map((name) => `name=${encodeURIComponent(name)}`).join("&")
-      url += `?${queryParams}`
+      const queryParams = nameFilters
+        .map((name) => `name=${encodeURIComponent(name)}`)
+        .join("&");
+      url += `?${queryParams}`;
     }
 
     try {
-      const response = await fetch(url)
+      const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const records = await response.json()
-      const newHash = hashRecords(records)
+      const records = await response.json();
+      const newHash = hashRecords(records);
       if (lastRecordsHash !== null && lastRecordsHash !== newHash) {
-        showMessage("success", "Dati aggiornati!")
+        showMessage("success", "Dati aggiornati!");
       }
-      lastRecordsHash = newHash
-      renderRecords(records)
-      updateTotals(records) // Aggiorna i totali con i record filtrati
-      console.log("Records fetched and rendered successfully.") // LOG 6: Conferma recupero
+      lastRecordsHash = newHash;
+      renderRecords(records);
+      updateTotals(records); // Aggiorna i totali con i record filtrati
+      console.log("Records fetched and rendered successfully."); // LOG 6: Conferma recupero
     } catch (error) {
-      console.error("Errore nel recupero dei record:", error)
-      showMessage("error", "Errore nel recupero dei record.")
+      console.error("Errore nel recupero dei record:", error);
+      showMessage("error", "Errore nel recupero dei record.");
     }
   }
 
   // Funzione per popolare il filtro a tendina con i nomi delle auto
-  let allVehicleNames = [] // Salva tutti i nomi per la ricerca
+  let allVehicleNames = []; // Salva tutti i nomi per la ricerca
   async function populateNameFilter() {
     try {
-      const response = await fetch("/api/names") // API per i nomi unici
+      const response = await fetch("/api/names"); // API per i nomi unici
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const names = (await response.json()).sort((a, b) => a.localeCompare(b)) // ORDINAMENTO A-Z
-      allVehicleNames = names // Salva per la ricerca
-      renderVehicleOptions(names)
-      updateSelectAllCheckbox() // Aggiorna lo stato di "Seleziona tutti" dopo aver popolato
+      const names = (await response.json()).sort((a, b) => a.localeCompare(b)); // ORDINAMENTO A-Z
+      allVehicleNames = names; // Salva per la ricerca
+      renderVehicleOptions(names);
+      updateSelectAllCheckbox(); // Aggiorna lo stato di "Seleziona tutti" dopo aver popolato
     } catch (error) {
-      console.error("Errore nel recupero dei nomi per il filtro:", error)
-      showMessage("error", "Errore nel caricamento dei filtri nome.")
+      console.error("Errore nel recupero dei nomi per il filtro:", error);
+      showMessage("error", "Errore nel caricamento dei filtri nome.");
     }
   }
 
-
   // Funzione per renderizzare le opzioni veicolo filtrate
   function renderVehicleOptions(names) {
-    vehicleOptionsContainer.innerHTML = "" // Pulisci le opzioni esistenti
+    vehicleOptionsContainer.innerHTML = ""; // Pulisci le opzioni esistenti
     names.forEach((name) => {
-      const label = document.createElement("label")
-      label.className = "checkbox-item"
-      const checkbox = document.createElement("input")
-      checkbox.type = "checkbox"
-      checkbox.value = name
-      checkbox.id = `filter-${name.replace(/\s/g, "-")}` // ID unico per la checkbox
+      const label = document.createElement("label");
+      label.className = "checkbox-item";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = name;
+      checkbox.id = `filter-${name.replace(/\s/g, "-")}`; // ID unico per la checkbox
       if (currentNameFilter.includes(name)) {
-        checkbox.checked = true
+        checkbox.checked = true;
       }
-      checkbox.addEventListener("change", updateSelectAllCheckbox)
-      label.appendChild(checkbox)
-      label.appendChild(document.createTextNode(name))
-      vehicleOptionsContainer.appendChild(label)
-    })
+      checkbox.addEventListener("change", updateSelectAllCheckbox);
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(name));
+      vehicleOptionsContainer.appendChild(label);
+    });
   }
 
   // Event listener per la barra di ricerca
   vehicleSearchInput.addEventListener("input", (e) => {
-    const search = e.target.value.trim().toLowerCase()
-    const filtered = allVehicleNames.filter((name) => name.toLowerCase().includes(search))
-    renderVehicleOptions(filtered)
-    updateSelectAllCheckbox()
-  })
+    const search = e.target.value.trim().toLowerCase();
+    const filtered = allVehicleNames.filter((name) =>
+      name.toLowerCase().includes(search),
+    );
+    renderVehicleOptions(filtered);
+    updateSelectAllCheckbox();
+  });
 
   // Funzione per aggiornare lo stato della checkbox "Seleziona tutti"
   function updateSelectAllCheckbox() {
-    const allCheckboxes = Array.from(vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]'))
-    const allChecked = allCheckboxes.every((cb) => cb.checked)
-    selectAllVehiclesCheckbox.checked = allChecked
+    const allCheckboxes = Array.from(
+      vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]'),
+    );
+    const allChecked = allCheckboxes.every((cb) => cb.checked);
+    selectAllVehiclesCheckbox.checked = allChecked;
   }
 
   // Funzione per renderizzare i record nella tabella
   function renderRecords(records) {
-    recordsTableBody.innerHTML = "" // Pulisci le righe esistenti
+    recordsTableBody.innerHTML = ""; // Pulisci le righe esistenti
     if (records.length === 0) {
-      noRecordsMessage.style.display = "block"
+      noRecordsMessage.style.display = "block";
     } else {
-      noRecordsMessage.style.display = "none"
+      noRecordsMessage.style.display = "none";
     }
 
     records.forEach((record) => {
-      const row = recordsTableBody.insertRow()
+      const row = recordsTableBody.insertRow();
       row.innerHTML = `
             <td>${record.name}</td>
             <td>${record.week_identifier}</td>
@@ -275,103 +302,115 @@ document.addEventListener("DOMContentLoaded", () => {
                 <button class="edit-btn" data-id="${record.id}">Modifica</button>
                 <button class="delete-btn" data-id="${record.id}">Elimina</button>
             </td>
-        `
-    })
+        `;
+    });
 
     // Aggiungi event listener per i bottoni di modifica ed eliminazione
     recordsTableBody.querySelectorAll(".edit-btn").forEach((button) => {
       button.addEventListener("click", (e) => {
-        console.log("Edit button clicked for ID:", e.target.dataset.id) // LOG 7: Traccia clic modifica
-        handleEdit(e.target.dataset.id, records)
-      })
-    })
+        console.log("Edit button clicked for ID:", e.target.dataset.id); // LOG 7: Traccia clic modifica
+        handleEdit(e.target.dataset.id, records);
+      });
+    });
     recordsTableBody.querySelectorAll(".delete-btn").forEach((button) => {
       button.addEventListener("click", (e) => {
-        console.log("Delete button clicked for ID:", e.target.dataset.id) // LOG 8: Traccia clic elimina
-        openDeleteConfirmModal(e.target.dataset.id)
-      })
-    })
+        console.log("Delete button clicked for ID:", e.target.dataset.id); // LOG 8: Traccia clic elimina
+        openDeleteConfirmModal(e.target.dataset.id);
+      });
+    });
   }
 
   // Funzione per aggiornare i totali (ora basata sui record passati, che saranno già filtrati)
   function updateTotals(records) {
-    const totalKilometers = records.reduce((sum, record) => sum + record.kilometers, 0)
-    const totalLitersConsumed = records.reduce((sum, record) => sum + record.liters_consumed, 0)
-    const totalCost = records.reduce((sum, record) => sum + record.calculated_cost, 0)
+    const totalKilometers = records.reduce(
+      (sum, record) => sum + record.kilometers,
+      0,
+    );
+    const totalLitersConsumed = records.reduce(
+      (sum, record) => sum + record.liters_consumed,
+      0,
+    );
+    const totalCost = records.reduce(
+      (sum, record) => sum + record.calculated_cost,
+      0,
+    );
 
-    totalKilometersSpan.textContent = totalKilometers.toFixed(2)
-    totalLitersConsumedSpan.textContent = totalLitersConsumed.toFixed(2)
-    totalCostSpan.textContent = totalCost.toFixed(2)
+    totalKilometersSpan.textContent = totalKilometers.toFixed(2);
+    totalLitersConsumedSpan.textContent = totalLitersConsumed.toFixed(2);
+    totalCostSpan.textContent = totalCost.toFixed(2);
 
     // Calcolo km medi per settimana
-    const uniqueWeeks = new Set(records.map(r => r.week_identifier))
-    const numWeeks = uniqueWeeks.size
-    let avgKmPerWeek = 0
+    const uniqueWeeks = new Set(records.map((r) => r.week_identifier));
+    const numWeeks = uniqueWeeks.size;
+    let avgKmPerWeek = 0;
     if (numWeeks > 0) {
-      avgKmPerWeek = totalKilometers / numWeeks
+      avgKmPerWeek = totalKilometers / numWeeks;
     }
-    const avgKmPerWeekSpan = document.getElementById("avgKmPerWeek")
+    const avgKmPerWeekSpan = document.getElementById("avgKmPerWeek");
     if (avgKmPerWeekSpan) {
-      avgKmPerWeekSpan.textContent = avgKmPerWeek.toFixed(2)
+      avgKmPerWeekSpan.textContent = avgKmPerWeek.toFixed(2);
     }
 
     // --- Statistiche Avanzate ---
     // 1. KM medi per auto per settimana
     // Raggruppo per veicolo e settimana
-    const kmPerCarPerWeek = {}
-    records.forEach(r => {
-      if (!kmPerCarPerWeek[r.name]) kmPerCarPerWeek[r.name] = {}
-      kmPerCarPerWeek[r.name][r.week_identifier] = (kmPerCarPerWeek[r.name][r.week_identifier] || 0) + r.kilometers
-    })
+    const kmPerCarPerWeek = {};
+    records.forEach((r) => {
+      if (!kmPerCarPerWeek[r.name]) kmPerCarPerWeek[r.name] = {};
+      kmPerCarPerWeek[r.name][r.week_identifier] =
+        (kmPerCarPerWeek[r.name][r.week_identifier] || 0) + r.kilometers;
+    });
     // Calcolo la media settimanale per ogni veicolo
-    const avgKmPerCarArr = Object.values(kmPerCarPerWeek).map(weeksObj => {
-      const weeks = Object.values(weeksObj)
-      if (weeks.length === 0) return 0
-      return weeks.reduce((a, b) => a + b, 0) / weeks.length
-    })
+    const avgKmPerCarArr = Object.values(kmPerCarPerWeek).map((weeksObj) => {
+      const weeks = Object.values(weeksObj);
+      if (weeks.length === 0) return 0;
+      return weeks.reduce((a, b) => a + b, 0) / weeks.length;
+    });
     // Media tra i veicoli
-    let avgKmPerCarPerWeek = 0
+    let avgKmPerCarPerWeek = 0;
     if (avgKmPerCarArr.length > 0) {
-      avgKmPerCarPerWeek = avgKmPerCarArr.reduce((a, b) => a + b, 0) / avgKmPerCarArr.length
+      avgKmPerCarPerWeek =
+        avgKmPerCarArr.reduce((a, b) => a + b, 0) / avgKmPerCarArr.length;
     }
-    const avgKmPerCarPerWeekSpan = document.getElementById("avgKmPerCarPerWeek")
+    const avgKmPerCarPerWeekSpan =
+      document.getElementById("avgKmPerCarPerWeek");
     if (avgKmPerCarPerWeekSpan) {
-      avgKmPerCarPerWeekSpan.textContent = avgKmPerCarPerWeek.toFixed(2)
+      avgKmPerCarPerWeekSpan.textContent = avgKmPerCarPerWeek.toFixed(2);
     }
 
     // 2. Litri medi per settimana
-    let avgLitersPerWeek = 0
+    let avgLitersPerWeek = 0;
     if (numWeeks > 0) {
-      avgLitersPerWeek = totalLitersConsumed / numWeeks
+      avgLitersPerWeek = totalLitersConsumed / numWeeks;
     }
-    const avgLitersPerWeekSpan = document.getElementById("avgLitersPerWeek")
+    const avgLitersPerWeekSpan = document.getElementById("avgLitersPerWeek");
     if (avgLitersPerWeekSpan) {
-      avgLitersPerWeekSpan.textContent = avgLitersPerWeek.toFixed(2)
+      avgLitersPerWeekSpan.textContent = avgLitersPerWeek.toFixed(2);
     }
 
     // 3. Costo medio per settimana
-    let avgCostPerWeek = 0
+    let avgCostPerWeek = 0;
     if (numWeeks > 0) {
-      avgCostPerWeek = totalCost / numWeeks
+      avgCostPerWeek = totalCost / numWeeks;
     }
-    const avgCostPerWeekSpan = document.getElementById("avgCostPerWeek")
+    const avgCostPerWeekSpan = document.getElementById("avgCostPerWeek");
     if (avgCostPerWeekSpan) {
-      avgCostPerWeekSpan.innerHTML = avgCostPerWeek.toFixed(2) + "&nbsp;&euro;"
+      avgCostPerWeekSpan.innerHTML = avgCostPerWeek.toFixed(2) + "&nbsp;&euro;";
     }
   }
 
   // --- Gestione Modal di Aggiunta ---
   openAddModalButton.addEventListener("click", () => {
-    console.log("Open Add Modal button clicked.") // LOG 9: Traccia clic "Aggiungi Nuovo Record"
-    addRecordForm.reset() // Resetta la form quando si apre il modale
-    toggleModal(addModal, true)
-  })
+    console.log("Open Add Modal button clicked."); // LOG 9: Traccia clic "Aggiungi Nuovo Record"
+    addRecordForm.reset(); // Resetta la form quando si apre il modale
+    toggleModal(addModal, true);
+  });
 
   addRecordForm.addEventListener("submit", async (event) => {
-    event.preventDefault()
-    console.log("Add Record Form submitted.") // LOG 10: Traccia submit form aggiunta
-    addSubmitButton.disabled = true
-    addSubmitButton.textContent = "Salvataggio..."
+    event.preventDefault();
+    console.log("Add Record Form submitted."); // LOG 10: Traccia submit form aggiunta
+    addSubmitButton.disabled = true;
+    addSubmitButton.textContent = "Salvataggio...";
 
     const formData = {
       name: addNameInput.value,
@@ -379,7 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
       kilometers: Number.parseFloat(addKilometersInput.value),
       fuelEfficiency: Number.parseFloat(addFuelEfficiencyInput.value),
       fuelType: addFuelTypeSelect.value,
-    }
+    };
 
     if (
       !formData.name ||
@@ -388,10 +427,13 @@ document.addEventListener("DOMContentLoaded", () => {
       isNaN(formData.fuelEfficiency) ||
       !formData.fuelType
     ) {
-      showMessage("error", "Per favore, compila tutti i campi correttamente nel modale di aggiunta.")
-      addSubmitButton.disabled = false
-      addSubmitButton.textContent = "Aggiungi Record"
-      return
+      showMessage(
+        "error",
+        "Per favore, compila tutti i campi correttamente nel modale di aggiunta.",
+      );
+      addSubmitButton.disabled = false;
+      addSubmitButton.textContent = "Aggiungi Record";
+      return;
     }
 
     try {
@@ -401,55 +443,55 @@ document.addEventListener("DOMContentLoaded", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
       if (response.ok) {
-        showMessage("success", result.message)
-        toggleModal(addModal, false) // Chiudi il modale
-        fetchRecords(currentNameFilter) // Ricarica e renderizza i record con il filtro corrente
-        populateNameFilter() // Aggiorna il filtro nomi
+        showMessage("success", result.message);
+        toggleModal(addModal, false); // Chiudi il modale
+        fetchRecords(currentNameFilter); // Ricarica e renderizza i record con il filtro corrente
+        populateNameFilter(); // Aggiorna il filtro nomi
       } else {
-        showMessage("error", "Errore: " + result.message)
+        showMessage("error", "Errore: " + result.message);
       }
     } catch (error) {
-      console.error("Errore durante l'invio del form di aggiunta:", error)
-      showMessage("error", "Errore durante il salvataggio del record.")
+      console.error("Errore durante l'invio del form di aggiunta:", error);
+      showMessage("error", "Errore durante il salvataggio del record.");
     } finally {
-      addSubmitButton.disabled = false
-      addSubmitButton.textContent = "Aggiungi Record"
+      addSubmitButton.disabled = false;
+      addSubmitButton.textContent = "Aggiungi Record";
     }
-  })
+  });
 
   // --- Gestione Modal di Modifica ---
   function handleEdit(id, records) {
-    const recordToEdit = records.find((r) => r.id === Number(id))
+    const recordToEdit = records.find((r) => r.id === Number(id));
     if (recordToEdit) {
-      editIdInput.value = recordToEdit.id
-      editNameInput.value = recordToEdit.name
-      editWeekIdentifierInput.value = recordToEdit.week_identifier
-      editKilometersInput.value = recordToEdit.kilometers
-      editFuelEfficiencyInput.value = recordToEdit.fuel_efficiency_km_per_liter
+      editIdInput.value = recordToEdit.id;
+      editNameInput.value = recordToEdit.name;
+      editWeekIdentifierInput.value = recordToEdit.week_identifier;
+      editKilometersInput.value = recordToEdit.kilometers;
+      editFuelEfficiencyInput.value = recordToEdit.fuel_efficiency_km_per_liter;
       // ✅ Normalizza carburante in lowercase per combaciare con le <option value="">
-      editFuelTypeSelect.value = recordToEdit.fuel_type.toLowerCase()
-      toggleModal(editModal, true)
+      editFuelTypeSelect.value = recordToEdit.fuel_type.toLowerCase();
+      toggleModal(editModal, true);
     }
   }
 
   editRecordForm.addEventListener("submit", async (event) => {
-    event.preventDefault()
-    console.log("Edit Record Form submitted.") // LOG 11: Traccia submit form modifica
-    updateButton.disabled = true
-    updateButton.textContent = "Aggiornamento..."
+    event.preventDefault();
+    console.log("Edit Record Form submitted."); // LOG 11: Traccia submit form modifica
+    updateButton.disabled = true;
+    updateButton.textContent = "Aggiornamento...";
 
-    const id = editIdInput.value
+    const id = editIdInput.value;
     const formData = {
       name: editNameInput.value,
       weekIdentifier: editWeekIdentifierInput.value,
       kilometers: Number.parseFloat(editKilometersInput.value),
       fuelEfficiency: Number.parseFloat(editFuelEfficiencyInput.value),
       fuelType: editFuelTypeSelect.value,
-    }
+    };
 
     if (
       !formData.name ||
@@ -458,10 +500,13 @@ document.addEventListener("DOMContentLoaded", () => {
       isNaN(formData.fuelEfficiency) ||
       !formData.fuelType
     ) {
-      showMessage("error", "Per favor, compila tutti i campi correttamente nel modal di modifica.")
-      updateButton.disabled = false
-      updateButton.textContent = "Aggiorna Record"
-      return
+      showMessage(
+        "error",
+        "Per favor, compila tutti i campi correttamente nel modal di modifica.",
+      );
+      updateButton.disabled = false;
+      updateButton.textContent = "Aggiorna Record";
+      return;
     }
 
     try {
@@ -471,142 +516,156 @@ document.addEventListener("DOMContentLoaded", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
       if (response.ok) {
-        showMessage("success", result.message)
-        toggleModal(editModal, false) // Chiudi il modale
-        fetchRecords(currentNameFilter) // Ricarica e renderizza i record con il filtro corrente
-        populateNameFilter() // Aggiorna il filtro nomi
+        showMessage("success", result.message);
+        toggleModal(editModal, false); // Chiudi il modale
+        fetchRecords(currentNameFilter); // Ricarica e renderizza i record con il filtro corrente
+        populateNameFilter(); // Aggiorna il filtro nomi
       } else {
-        showMessage("error", "Errore: " + result.message)
+        showMessage("error", "Errore: " + result.message);
       }
     } catch (error) {
-      console.error("Errore durante l'aggiornamento del record:", error)
-      showMessage("error", "Errore durante l'aggiornamento del record.")
+      console.error("Errore durante l'aggiornamento del record:", error);
+      showMessage("error", "Errore durante l'aggiornamento del record.");
     } finally {
-      updateButton.disabled = false
-      updateButton.textContent = "Aggiorna Record"
+      updateButton.disabled = false;
+      updateButton.textContent = "Aggiorna Record";
     }
-  })
+  });
 
   // --- Gestione Modal di Conferma Eliminazione ---
   function openDeleteConfirmModal(id) {
-    console.log("Opening delete confirmation modal for ID:", id) // LOG 12: Traccia apertura conferma eliminazione
-    recordToDeleteId = id
-    toggleModal(deleteConfirmModal, true)
+    console.log("Opening delete confirmation modal for ID:", id); // LOG 12: Traccia apertura conferma eliminazione
+    recordToDeleteId = id;
+    toggleModal(deleteConfirmModal, true);
   }
 
   confirmDeleteButton.addEventListener("click", async () => {
-    console.log("Confirm Delete button clicked.") // LOG 13: Traccia clic conferma eliminazione
+    console.log("Confirm Delete button clicked."); // LOG 13: Traccia clic conferma eliminazione
     if (recordToDeleteId) {
-      confirmDeleteButton.disabled = true
-      confirmDeleteButton.textContent = "Eliminazione..."
+      confirmDeleteButton.disabled = true;
+      confirmDeleteButton.textContent = "Eliminazione...";
 
       try {
         const response = await fetch(`/api/records/${recordToDeleteId}`, {
           method: "DELETE",
-        })
-        const result = await response.json()
+        });
+        const result = await response.json();
         if (response.ok) {
-          showMessage("success", result.message)
-          fetchRecords(currentNameFilter) // Ricarica e renderizza i record con il filtro corrente
-          populateNameFilter() // Aggiorna il filtro nomi
+          showMessage("success", result.message);
+          fetchRecords(currentNameFilter); // Ricarica e renderizza i record con il filtro corrente
+          populateNameFilter(); // Aggiorna il filtro nomi
         } else {
-          showMessage("error", "Errore: " + result.message)
+          showMessage("error", "Errore: " + result.message);
         }
       } catch (error) {
-        console.error("Errore durante l'eliminazione del record:", error)
-        showMessage("error", "Errore durante l'eliminazione del record.")
+        console.error("Errore durante l'eliminazione del record:", error);
+        showMessage("error", "Errore durante l'eliminazione del record.");
       } finally {
-        toggleModal(deleteConfirmModal, false) // Chiudi il modale
-        recordToDeleteId = null
-        confirmDeleteButton.disabled = false
-        confirmDeleteButton.textContent = "Elimina"
+        toggleModal(deleteConfirmModal, false); // Chiudi il modale
+        recordToDeleteId = null;
+        confirmDeleteButton.disabled = false;
+        confirmDeleteButton.textContent = "Elimina";
       }
     }
-  })
+  });
 
   cancelDeleteButton.addEventListener("click", () => {
-    console.log("Cancel Delete button clicked.") // LOG 14: Traccia clic annulla eliminazione
-    toggleModal(deleteConfirmModal, false)
-    recordToDeleteId = null
-  })
+    console.log("Cancel Delete button clicked."); // LOG 14: Traccia clic annulla eliminazione
+    toggleModal(deleteConfirmModal, false);
+    recordToDeleteId = null;
+  });
 
   // --- Gestione Chiusura Modali (generica) ---
   document.querySelectorAll(".close-button").forEach((button) => {
     button.addEventListener("click", (event) => {
-      console.log("Close button clicked.") // LOG 15: Traccia clic chiusura modale
-      const modalToCloseId = event.target.dataset.modalId // Usiamo data-modal-id
-      const modalToClose = document.getElementById(modalToCloseId)
+      console.log("Close button clicked."); // LOG 15: Traccia clic chiusura modale
+      const modalToCloseId = event.target.dataset.modalId; // Usiamo data-modal-id
+      const modalToClose = document.getElementById(modalToCloseId);
       if (modalToClose) {
-        toggleModal(modalToClose, false)
+        toggleModal(modalToClose, false);
       }
-    })
-  })
+    });
+  });
 
   window.addEventListener("click", (event) => {
-    console.log("Window click event. Target ID:", event.target.id, "Target Classes:", event.target.className) // Updated LOG
+    console.log(
+      "Window click event. Target ID:",
+      event.target.id,
+      "Target Classes:",
+      event.target.className,
+    ); // Updated LOG
     if (event.target === addModal) {
-      console.log("Clicked outside addModal.")
-      toggleModal(addModal, false)
+      console.log("Clicked outside addModal.");
+      toggleModal(addModal, false);
     }
     if (event.target === editModal) {
-      console.log("Clicked outside editModal.")
-      toggleModal(editModal, false)
+      console.log("Clicked outside editModal.");
+      toggleModal(editModal, false);
     }
     if (event.target === deleteConfirmModal) {
-      console.log("Clicked outside deleteConfirmModal.")
-      toggleModal(deleteConfirmModal, false)
+      console.log("Clicked outside deleteConfirmModal.");
+      toggleModal(deleteConfirmModal, false);
     }
     // Chiudi il dropdown del filtro se si clicca fuori
-    if (!filterDropdownContent.contains(event.target) && event.target !== filterDropdownButton) {
-      filterDropdownContent.classList.remove("show")
-      filterDropdownButton.classList.remove("active")
+    if (
+      !filterDropdownContent.contains(event.target) &&
+      event.target !== filterDropdownButton
+    ) {
+      filterDropdownContent.classList.remove("show");
+      filterDropdownButton.classList.remove("active");
     }
-  })
+  });
 
   // --- Gestione Filtri Personalizzati ---
   filterDropdownButton.addEventListener("click", () => {
-    filterDropdownContent.classList.toggle("show")
-    filterDropdownButton.classList.toggle("active")
-  })
+    filterDropdownContent.classList.toggle("show");
+    filterDropdownButton.classList.toggle("active");
+  });
 
   selectAllVehiclesCheckbox.addEventListener("change", (event) => {
-    const isChecked = event.target.checked
-    const allCheckboxes = vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]')
+    const isChecked = event.target.checked;
+    const allCheckboxes = vehicleOptionsContainer.querySelectorAll(
+      'input[type="checkbox"]',
+    );
     allCheckboxes.forEach((cb) => {
-      cb.checked = isChecked
-    })
-  })
+      cb.checked = isChecked;
+    });
+  });
 
   applyFilterButton.addEventListener("click", () => {
-    const selectedNames = Array.from(vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]:checked')).map(
-      (cb) => cb.value,
-    )
-    fetchRecords(selectedNames)
-    filterDropdownContent.classList.remove("show") // Chiudi il dropdown dopo l'applicazione
-    filterDropdownButton.classList.remove("active")
-  })
+    const selectedNames = Array.from(
+      vehicleOptionsContainer.querySelectorAll(
+        'input[type="checkbox"]:checked',
+      ),
+    ).map((cb) => cb.value);
+    fetchRecords(selectedNames);
+    filterDropdownContent.classList.remove("show"); // Chiudi il dropdown dopo l'applicazione
+    filterDropdownButton.classList.remove("active");
+  });
 
   clearFilterButton.addEventListener("click", () => {
-    selectAllVehiclesCheckbox.checked = false
-    const allCheckboxes = vehicleOptionsContainer.querySelectorAll('input[type="checkbox"]')
+    selectAllVehiclesCheckbox.checked = false;
+    const allCheckboxes = vehicleOptionsContainer.querySelectorAll(
+      'input[type="checkbox"]',
+    );
     allCheckboxes.forEach((cb) => {
-      cb.checked = false // Deseleziona tutte le opzioni
-    })
-    fetchRecords([]) // Richiama i record senza filtro
-    filterDropdownContent.classList.remove("show") // Chiudi il dropdown dopo la pulizia
-    filterDropdownButton.classList.remove("active")
-  })
+      cb.checked = false; // Deseleziona tutte le opzioni
+    });
+    fetchRecords([]); // Richiama i record senza filtro
+    filterDropdownContent.classList.remove("show"); // Chiudi il dropdown dopo la pulizia
+    filterDropdownButton.classList.remove("active");
+  });
 
   // Recupero iniziale dei record e popolamento filtro al caricamento della pagina
-  fetchRecords()
-  populateNameFilter()
+  fetchRecords();
+  populateNameFilter();
 
   // Aggiornamento automatico ogni 2 secondi dei record (polling)
   setInterval(() => {
-    fetchRecords(currentNameFilter)
-  }, 2000)
-})
+    fetchRecords(currentNameFilter);
+  }, 2000);
+});

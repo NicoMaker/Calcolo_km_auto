@@ -111,7 +111,9 @@ body {
   font-size: 1em;
   color: var(--text-dark);
   background-color: var(--input-background);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .form-group input:focus,
@@ -155,7 +157,11 @@ button {
   font-size: 1em;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s, opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    opacity 0.2s,
+    transform 0.1s,
+    box-shadow 0.2s;
   width: 100%;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
 }
@@ -325,7 +331,9 @@ button:disabled {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   opacity: 0;
   transform: translateY(-20px);
-  transition: opacity 0.3s, transform 0.3s;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
   pointer-events: auto;
 }
 
@@ -524,7 +532,9 @@ th {
   font-size: 1em;
   color: var(--text-dark);
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .custom-select-button:hover {
@@ -621,7 +631,9 @@ th {
   margin-bottom: 6px;
   background-color: var(--input-background);
   color: var(--text-dark);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 .vehicle-search-input:focus {
   outline: none;
@@ -644,7 +656,8 @@ button.red:hover {
   font-weight: bold;
   transition: background 0.2s;
 }
-.delete-all-btn:hover, .delete-all-btn:focus {
+.delete-all-btn:hover,
+.delete-all-btn:focus {
   background-color: #b71c1c !important;
   color: #fff !important;
 }
@@ -655,7 +668,7 @@ button.red:hover {
   padding: 1.5rem 1.2rem;
   background: #f8fafc;
   border-radius: 1.2rem;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.04);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -689,7 +702,7 @@ button.red:hover {
 .advanced-stats-item {
   background: #fff;
   border-radius: 0.8rem;
-  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.03);
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.03);
   padding: 1.2rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -756,7 +769,8 @@ button.red:hover {
   border-collapse: collapse;
 }
 
-.table-fixed-scroll th, .table-fixed-scroll td {
+.table-fixed-scroll th,
+.table-fixed-scroll td {
   padding: 10px 8px;
   border-bottom: 1px solid var(--border-light);
 }
@@ -765,7 +779,7 @@ button.red:hover {
   border-bottom: none;
 }
 
-input{
+input {
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
@@ -774,13 +788,15 @@ input{
   font-size: 1em;
   color: var(--text-dark);
   background-color: var(--input-background);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
-.vehicle-search-input{
+.vehicle-search-input {
   display: none;
 }
 
-#filterDropdownButton:hover{
+#filterDropdownButton:hover {
   color: white;
 }
