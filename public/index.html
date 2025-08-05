@@ -10,9 +10,19 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <!-- Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
+    <div class="theme-toggle-container">
+      <button id="themeToggle" title="Cambia tema" class="theme-toggle-btn">
+        <span class="material-icons" id="themeIcon">dark_mode</span>
+      </button>
+    </div>
     <div class="container">
       <!-- Area per i messaggi di notifica -->
       <div id="messageArea" class="message-area"></div>
@@ -27,7 +37,7 @@
         <!-- Pulsante per aprire il modale di aggiunta -->
         <div class="form-actions add-record-button-container">
           <button type="button" id="openAddModalButton">
-            Aggiungi Nuovo Record
+            <span class="material-icons">add_circle</span> Aggiungi Nuovo Record
           </button>
         </div>
       </div>
@@ -59,16 +69,19 @@
             </div>
           </div>
           <div class="form-actions">
-            <button type="button" id="applyFilterButton">Applica Filtro</button>
+            <button type="button" id="applyFilterButton">
+              <span class="material-icons">filter_alt</span> Applica Filtro
+            </button>
             <button type="button" id="clearFilterButton" class="cancel-button">
-              Pulisci Filtro
+              <span class="material-icons">clear</span> Pulisci Filtro
             </button>
             <button
               type="button"
               id="deleteAllButton"
               class="delete-btn delete-all-btn"
             >
-              Elimina Tutti i Filtrati
+              <span class="material-icons">delete_sweep</span> Elimina Tutti i
+              Filtrati
             </button>
           </div>
         </div>
@@ -101,7 +114,7 @@
             Totale KM: <span id="totalKilometers">0.00</span>
           </div>
           <div class="total-item">
-            Totale Litri Consumati: <span id="totalLitersConsumed">0.00</span> 
+            Totale Litri Consumati: <span id="totalLitersConsumed">0.00</span>
           </div>
           <div class="total-item">
             Costo Totale: <span id="totalCost">0.00</span> €
