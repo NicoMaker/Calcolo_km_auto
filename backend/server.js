@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 let db;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../frontend")));
 
 async function initializeDatabase() {
   try {
@@ -44,7 +44,7 @@ async function initializeDatabase() {
 
 app.get("/api/fuel-price", (req, res) => {
   const fuelType = req.query.fuelType?.toLowerCase();
-  const pricesPath = path.join(__dirname, "public", "fuel-prices.json");
+  const pricesPath = path.join(__dirname, "../frontend", "fuel-prices.json");
   let prices = {};
   try {
     prices = JSON.parse(fs.readFileSync(pricesPath, "utf8"));
@@ -98,7 +98,7 @@ app.get("/api/records", (req, res) => {
 
     const records = db.prepare(sql).all(...params);
 
-    const pricesPath = path.join(__dirname, "public", "fuel-prices.json");
+    const pricesPath = path.join(__dirname, "../frontend", "fuel-prices.json");
     let prices = {};
     try {
       prices = JSON.parse(fs.readFileSync(pricesPath, "utf8"));
