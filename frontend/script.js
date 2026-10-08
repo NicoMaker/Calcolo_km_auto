@@ -290,17 +290,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     records.forEach((record) => {
       const row = recordsTableBody.insertRow();
+      const fuelClass = String(record.fuel_type || "").toLowerCase();
+      // data-label alimenta la vista a schede su schermi stretti
       row.innerHTML = `
-            <td>${record.name}</td>
-            <td>${record.week_identifier}</td>
-            <td>${record.kilometers.toFixed(2)}</td>
-            <td>${record.fuel_type}</td>
-            <td>${record.fuel_price_per_liter.toFixed(2)} €</td>
-            <td>${record.liters_consumed.toFixed(2)} L</td>
-            <td>${record.calculated_cost.toFixed(2)} €</td>
+            <td class="cell-name" data-label="Veicolo">${escapeHtml(record.name)}</td>
+            <td data-label="Settimana">${escapeHtml(record.week_identifier)}</td>
+            <td class="num" data-label="KM">${record.kilometers.toFixed(2)}</td>
+            <td data-label="Carburante"><span class="fuel fuel-${escapeHtml(fuelClass)}">${escapeHtml(record.fuel_type)}</span></td>
+            <td class="num" data-label="Prezzo/L">${record.fuel_price_per_liter.toFixed(2)} €</td>
+            <td class="num" data-label="Litri">${record.liters_consumed.toFixed(2)} L</td>
+            <td class="num cell-cost" data-label="Costo">${record.calculated_cost.toFixed(2)} €</td>
             <td class="actions">
-                <button class="edit-btn" data-id="${record.id}">Modifica</button>
-                <button class="delete-btn" data-id="${record.id}">Elimina</button>
+                <div class="row-actions">
+                    <button class="icon-action edit-btn" data-id="${record.id}" title="Modifica" aria-label="Modifica record"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17v3z"/><path d="m14.5 7.5 3 3"/></svg></button>
+                    <button class="icon-action delete-btn" data-id="${record.id}" title="Elimina" aria-label="Elimina record"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
+                </div>
             </td>
         `;
     });
@@ -308,16 +312,28 @@ document.addEventListener("DOMContentLoaded", () => {
     // Aggiungi event listener per i bottoni di modifica ed eliminazione
     recordsTableBody.querySelectorAll(".edit-btn").forEach((button) => {
       button.addEventListener("click", (e) => {
-        console.log("Edit button clicked for ID:", e.target.dataset.id); // LOG 7: Traccia clic modifica
-        handleEdit(e.target.dataset.id, records);
+        const id = e.currentTarget.dataset.id;
+        console.log("Edit button clicked for ID:", id); // LOG 7: Traccia clic modifica
+        handleEdit(id, records);
       });
     });
     recordsTableBody.querySelectorAll(".delete-btn").forEach((button) => {
       button.addEventListener("click", (e) => {
-        console.log("Delete button clicked for ID:", e.target.dataset.id); // LOG 8: Traccia clic elimina
-        openDeleteConfirmModal(e.target.dataset.id);
+        const id = e.currentTarget.dataset.id;
+        console.log("Delete button clicked for ID:", id); // LOG 8: Traccia clic elimina
+        openDeleteConfirmModal(id);
       });
     });
+  }
+
+  // Evita che testo inserito dall'utente venga interpretato come HTML
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   // Funzione per aggiornare i totali (ora basata sui record passati, che saranno già filtrati)
@@ -613,7 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Chiudi il dropdown del filtro se si clicca fuori
     if (
       !filterDropdownContent.contains(event.target) &&
-      event.target !== filterDropdownButton
+      !filterDropdownButton.contains(event.target)
     ) {
       filterDropdownContent.classList.remove("show");
       filterDropdownButton.classList.remove("active");
@@ -672,18 +688,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // === THEME TOGGLE ===
   (function () {
     const themeToggle = document.getElementById("themeToggle");
-    const themeIcon = document.getElementById("themeIcon");
     const body = document.body;
     const darkModeKey = "darkMode";
 
     function setDarkMode(on) {
       if (on) {
         body.classList.add("dark");
-        themeIcon.textContent = "light_mode";
         localStorage.setItem(darkModeKey, "1");
       } else {
         body.classList.remove("dark");
-        themeIcon.textContent = "dark_mode";
         localStorage.setItem(darkModeKey, "0");
       }
     }

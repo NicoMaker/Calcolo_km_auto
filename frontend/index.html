@@ -3,81 +3,125 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <title>Tracciatore KM Settimanali</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/style.css" />
-    <!-- Link a Google Fonts per un font moderno (Inter) -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Material Icons -->
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
   </head>
 
   <body>
-    <div class="container">
-      <!-- Area per i messaggi di notifica -->
-      <div id="messageArea" class="message-area"></div>
+    <!-- Area per i messaggi di notifica -->
+    <div id="messageArea" class="message-area" aria-live="polite"></div>
 
-      <div class="card">
-        <h1 class="card-title">Tracciatore KM Settimanali</h1>
-        <p class="card-description">
-          Registra i tuoi chilometri e calcola i costi e il consumo di
-          carburante.
-        </p>
+    <header class="app-header">
+      <div class="app-header-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none">
+              <rect width="40" height="40" rx="10" fill="currentColor" opacity="0.12" />
+              <path d="M13 34 18 6M27 34 22 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+              <path d="M20 8v5M20 18v6M20 29v5" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </span>
+          <div class="brand-text">
+            <h1>Tracciatore KM</h1>
+            <p>Chilometri, consumi e costo del carburante per settimana</p>
+          </div>
+        </div>
 
-        <!-- Pulsante per aprire il modale di aggiunta -->
-        <div class="form-actions add-record-button-container">
-          <button type="button" id="openAddModalButton">
-            <span class="material-icons">add_circle</span> Aggiungi Nuovo Record
+        <div class="header-actions">
+          <button
+            type="button"
+            id="openAddModalButton"
+            class="btn btn-accent"
+          >
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            <span class="btn-label">Nuovo record</span>
+          </button>
+          <button
+            type="button"
+            id="themeToggle"
+            class="btn btn-icon btn-on-dark"
+            aria-label="Cambia tema"
+            title="Cambia tema"
+          >
+            <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
           </button>
         </div>
       </div>
+    </header>
 
-      <div class="card">
-        <h2 class="card-title">Riepilogo Settimanale</h2>
+    <main class="container">
+      <section class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Riepilogo settimanale</h2>
+        </div>
 
         <!-- Filtro per nome auto con tendina personalizzata e checkbox -->
         <div class="filter-section">
           <div class="form-group">
-            <label>Filtra per Nome Auto</label>
+            <label>Veicoli</label>
             <div class="custom-select-container">
               <button
                 type="button"
                 id="filterDropdownButton"
                 class="custom-select-button"
               >
-                Seleziona Veicoli <span class="arrow-down">&#9660;</span>
+                <span>Seleziona veicoli</span>
+                <svg class="icon arrow-down" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
               </button>
               <div id="filterDropdownContent" class="custom-select-dropdown">
                 <label class="checkbox-item">
-                  <input type="checkbox" id="selectAllVehicles" /> Tutti i
-                  veicoli
+                  <input type="checkbox" id="selectAllVehicles" />
+                  <span>Tutti i veicoli</span>
                 </label>
                 <div id="vehicleOptionsContainer">
-                  <!-- Vehicle options with checkboxes will be populated by JavaScript -->
+                  <!-- Le opzioni veicolo vengono inserite da JavaScript -->
                 </div>
               </div>
             </div>
           </div>
           <div class="form-actions">
-            <button type="button" id="applyFilterButton">
-              <span class="material-icons">filter_alt</span> Applica Filtro
+            <button type="button" id="applyFilterButton" class="btn btn-primary">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7.5V19l-4-2v-4.5z"/></svg> Applica filtro
             </button>
-            <button type="button" id="clearFilterButton" class="cancel-button">
-              <span class="material-icons">clear</span> Pulisci Filtro
+            <button type="button" id="clearFilterButton" class="btn btn-ghost cancel-button">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7.5V19l-4-2v-4.5z"/><path d="M3 3l18 18"/></svg> Azzera
             </button>
             <button
               type="button"
               id="deleteAllButton"
-              class="delete-btn delete-all-btn"
+              class="btn btn-danger-ghost delete-all-btn"
             >
-              <span class="material-icons">delete_sweep</span> Elimina Tutti i
-              Filtrati
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg> Elimina visibili
             </button>
+          </div>
+        </div>
+
+        <!-- Totali: il computer di bordo -->
+        <div class="totals" aria-label="Totali dei record visualizzati">
+          <div class="total-item">
+            <span class="total-label">Distanza</span>
+            <span class="total-value"
+              ><span id="totalKilometers">0.00</span><small>km</small></span
+            >
+          </div>
+          <div class="total-item">
+            <span class="total-label">Carburante consumato</span>
+            <span class="total-value"
+              ><span id="totalLitersConsumed">0.00</span><small>L</small></span
+            >
+          </div>
+          <div class="total-item total-item-cost">
+            <span class="total-label">Costo totale</span>
+            <span class="total-value"
+              ><span id="totalCost">0.00</span><small>€</small></span
+            >
           </div>
         </div>
 
@@ -86,84 +130,74 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>Nome</th>
+                <th>Veicolo</th>
                 <th>Settimana</th>
-                <th>KM</th>
+                <th class="num">KM</th>
                 <th>Carburante</th>
-                <th>Prezzo/L</th>
-                <th>Litri Consumati</th>
-                <th>Costo Settimanale</th>
-                <th>Azioni</th>
+                <th class="num">Prezzo/L</th>
+                <th class="num">Litri</th>
+                <th class="num">Costo</th>
+                <th class="col-actions"><span class="sr-only">Azioni</span></th>
               </tr>
             </thead>
             <tbody id="recordsTableBody">
-              <!-- Records will be inserted here by JavaScript -->
+              <!-- I record vengono inseriti da JavaScript -->
             </tbody>
           </table>
         </div>
         <p id="noRecordsMessage" class="no-records-message">
-          Nessun record trovato. Inizia aggiungendone uno!
+          Nessun record trovato. Aggiungi la prima settimana con “Nuovo record”.
         </p>
-        <div class="totals">
-          <div class="total-item">
-            Totale KM: <span id="totalKilometers">0.00</span>
-          </div>
-          <div class="total-item">
-            Totale Litri Consumati: <span id="totalLitersConsumed">0.00</span>
-          </div>
-          <div class="total-item">
-            Costo Totale: <span id="totalCost">0.00</span> €
-          </div>
-        </div>
+
         <!-- Statistiche avanzate -->
-        <div class="advanced-stats card">
-          <div class="advanced-stats-title">Statistiche Avanzate</div>
+        <div class="advanced-stats">
+          <h3 class="advanced-stats-title">Medie settimanali</h3>
           <div class="advanced-stats-grid">
             <div class="advanced-stats-item">
-              <span class="stats-label">KM medi per auto per settimana</span>
+              <span class="stats-label">KM medi per auto</span>
               <span class="stats-value" id="avgKmPerCarPerWeek">0.00</span>
             </div>
             <div class="advanced-stats-item">
-              <span class="stats-label">Litri medi per settimana</span>
+              <span class="stats-label">Litri medi</span>
               <span class="stats-value" id="avgLitersPerWeek">0.00</span>
             </div>
             <div class="advanced-stats-item center-cost">
-              <span class="stats-label">Costo medio per settimana</span>
+              <span class="stats-label">Costo medio</span>
               <span class="stats-value" id="avgCostPerWeek">0.00&nbsp;€</span>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
 
     <!-- Modal per l'aggiunta di un nuovo record -->
     <div id="addModal" class="modal">
       <div class="modal-content">
-        <span class="close-button" data-modal-id="addModal">&times;</span>
-        <h2 class="modal-title">Aggiungi Nuovo Record</h2>
+        <span class="close-button" data-modal-id="addModal" role="button" aria-label="Chiudi">&times;</span>
+        <h2 class="modal-title">Nuovo record</h2>
         <form id="addRecordForm" class="form-grid">
           <div class="form-group">
-            <label for="addName">Nome (es. Auto A)</label>
+            <label for="addName">Veicolo</label>
             <input
               type="text"
               id="addName"
               name="name"
-              placeholder="Nome del veicolo/categoria"
+              placeholder="Es. Panda, Moto B"
               required
             />
           </div>
           <div class="form-group">
-            <label for="addWeekIdentifier">Settimana (es. 2025-W28)</label>
+            <label for="addWeekIdentifier">Settimana</label>
             <input
               type="text"
               id="addWeekIdentifier"
               name="weekIdentifier"
-              placeholder="Anno-Settimana (es. 2025-W01)"
+              placeholder="Es. 2026-W41"
               required
             />
           </div>
           <div class="form-group">
-            <label for="addKilometers">KM Percorsi</label>
+            <label for="addKilometers">KM percorsi</label>
             <input
               type="number"
               step="0.01"
@@ -174,7 +208,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="addFuelEfficiency">KM per Litro</label>
+            <label for="addFuelEfficiency">KM per litro</label>
             <input
               type="number"
               step="0.01"
@@ -185,7 +219,7 @@
             />
           </div>
           <div class="form-group full-width">
-            <label for="addFuelType">Tipo Carburante</label>
+            <label for="addFuelType">Alimentazione</label>
             <select id="addFuelType" name="fuelType" required>
               <option value="" disabled selected>
                 Seleziona un tipo di alimentazione
@@ -198,7 +232,7 @@
             </select>
           </div>
           <div class="form-group full-width form-actions">
-            <button type="submit" id="addSubmitButton">Aggiungi Record</button>
+            <button type="submit" id="addSubmitButton" class="btn btn-primary">Aggiungi record</button>
           </div>
         </form>
       </div>
@@ -207,32 +241,32 @@
     <!-- Modal per la modifica di un record esistente -->
     <div id="editModal" class="modal">
       <div class="modal-content">
-        <span class="close-button" data-modal-id="editModal">&times;</span>
-        <h2 class="modal-title">Modifica Record</h2>
+        <span class="close-button" data-modal-id="editModal" role="button" aria-label="Chiudi">&times;</span>
+        <h2 class="modal-title">Modifica record</h2>
         <form id="editRecordForm" class="form-grid">
           <input type="hidden" id="editId" name="id" />
           <div class="form-group">
-            <label for="editName">Nome (es. Auto A, Moto B)</label>
+            <label for="editName">Veicolo</label>
             <input
               type="text"
               id="editName"
               name="name"
-              placeholder="Nome del veicolo/categoria"
+              placeholder="Es. Panda, Moto B"
               required
             />
           </div>
           <div class="form-group">
-            <label for="editWeekIdentifier">Settimana (es. 2025-W28)</label>
+            <label for="editWeekIdentifier">Settimana</label>
             <input
               type="text"
               id="editWeekIdentifier"
               name="weekIdentifier"
-              placeholder="Anno-Settimana (es. 2025-W01)"
+              placeholder="Es. 2026-W41"
               required
             />
           </div>
           <div class="form-group">
-            <label for="editKilometers">KM Percorsi</label>
+            <label for="editKilometers">KM percorsi</label>
             <input
               type="number"
               step="0.01"
@@ -243,7 +277,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="editFuelEfficiency">KM per Litro</label>
+            <label for="editFuelEfficiency">KM per litro</label>
             <input
               type="number"
               step="0.01"
@@ -254,7 +288,7 @@
             />
           </div>
           <div class="form-group full-width">
-            <label for="editFuelType">Tipo Carburante</label>
+            <label for="editFuelType">Alimentazione</label>
             <select id="editFuelType" name="fuelType" required>
               <option value="benzina">Benzina</option>
               <option value="diesel">Diesel</option>
@@ -264,7 +298,7 @@
             </select>
           </div>
           <div class="form-group full-width form-actions">
-            <button type="submit" id="updateButton">Aggiorna Record</button>
+            <button type="submit" id="updateButton" class="btn btn-primary">Salva modifiche</button>
           </div>
         </form>
       </div>
@@ -273,11 +307,11 @@
     <!-- Modal per la conferma di eliminazione -->
     <div id="deleteConfirmModal" class="modal">
       <div class="modal-content small-modal">
-        <h2 class="modal-title">Conferma Eliminazione</h2>
-        <p>Sei sicuro di voler eliminare questo record?</p>
+        <h2 class="modal-title">Eliminare il record?</h2>
+        <p class="modal-text">L’operazione è definitiva.</p>
         <div class="form-actions">
-          <button id="confirmDeleteButton" class="delete-btn">Elimina</button>
-          <button id="cancelDeleteButton" class="cancel-button">Annulla</button>
+          <button id="cancelDeleteButton" class="btn btn-ghost cancel-button">Annulla</button>
+          <button id="confirmDeleteButton" class="btn btn-danger delete-btn">Elimina</button>
         </div>
       </div>
     </div>
@@ -285,16 +319,16 @@
     <!-- Modal per la conferma di eliminazione multipla -->
     <div id="deleteAllConfirmModal" class="modal">
       <div class="modal-content small-modal">
-        <h2 class="modal-title">Conferma Eliminazione</h2>
-        <p id="deleteAllConfirmText">
+        <h2 class="modal-title">Eliminare più record?</h2>
+        <p id="deleteAllConfirmText" class="modal-text">
           Sei sicuro di voler eliminare tutti i record filtrati?
         </p>
         <div class="form-actions">
-          <button id="confirmDeleteAllButton" class="delete-btn delete-all-btn">
-            Elimina
-          </button>
-          <button id="cancelDeleteAllButton" class="cancel-button">
+          <button id="cancelDeleteAllButton" class="btn btn-ghost cancel-button">
             Annulla
+          </button>
+          <button id="confirmDeleteAllButton" class="btn btn-danger delete-all-btn-confirm">
+            Elimina
           </button>
         </div>
       </div>
