@@ -23,9 +23,25 @@
         <div class="brand">
           <span class="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 40 40" fill="none">
-              <rect width="40" height="40" rx="10" fill="currentColor" opacity="0.12" />
-              <path d="M13 34 18 6M27 34 22 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
-              <path d="M20 8v5M20 18v6M20 29v5" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" />
+              <rect
+                width="40"
+                height="40"
+                rx="10"
+                fill="currentColor"
+                opacity="0.12"
+              />
+              <path
+                d="M13 34 18 6M27 34 22 6"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+              />
+              <path
+                d="M20 8v5M20 18v6M20 29v5"
+                stroke="var(--accent)"
+                stroke-width="3"
+                stroke-linecap="round"
+              />
             </svg>
           </span>
           <div class="brand-text">
@@ -35,12 +51,10 @@
         </div>
 
         <div class="header-actions">
-          <button
-            type="button"
-            id="openAddModalButton"
-            class="btn btn-accent"
-          >
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          <button type="button" id="openAddModalButton" class="btn btn-accent">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
             <span class="btn-label">Nuovo record</span>
           </button>
           <button
@@ -50,7 +64,14 @@
             aria-label="Cambia tema"
             title="Cambia tema"
           >
-            <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg><svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+            <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" /></svg
+            ><svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -73,7 +94,13 @@
                 class="custom-select-button"
               >
                 <span>Seleziona veicoli</span>
-                <svg class="icon arrow-down" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                <svg
+                  class="icon arrow-down"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
               </button>
               <div id="filterDropdownContent" class="custom-select-dropdown">
                 <label class="checkbox-item">
@@ -87,18 +114,39 @@
             </div>
           </div>
           <div class="form-actions">
-            <button type="button" id="applyFilterButton" class="btn btn-primary">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7.5V19l-4-2v-4.5z"/></svg> Applica filtro
+            <button
+              type="button"
+              id="applyFilterButton"
+              class="btn btn-primary"
+            >
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 5h16l-6 7.5V19l-4-2v-4.5z" />
+              </svg>
+              Applica filtro
             </button>
-            <button type="button" id="clearFilterButton" class="btn btn-ghost cancel-button">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7.5V19l-4-2v-4.5z"/><path d="M3 3l18 18"/></svg> Azzera
+            <button
+              type="button"
+              id="clearFilterButton"
+              class="btn btn-ghost cancel-button"
+            >
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 5h16l-6 7.5V19l-4-2v-4.5z" />
+                <path d="M3 3l18 18" />
+              </svg>
+              Azzera
             </button>
             <button
               type="button"
               id="deleteAllButton"
               class="btn btn-danger-ghost delete-all-btn"
             >
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg> Elimina visibili
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16M10 11v6M14 11v6" />
+                <path
+                  d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"
+                />
+              </svg>
+              Elimina visibili
             </button>
           </div>
         </div>
@@ -173,7 +221,13 @@
     <!-- Modal per l'aggiunta di un nuovo record -->
     <div id="addModal" class="modal">
       <div class="modal-content">
-        <span class="close-button" data-modal-id="addModal" role="button" aria-label="Chiudi">&times;</span>
+        <span
+          class="close-button"
+          data-modal-id="addModal"
+          role="button"
+          aria-label="Chiudi"
+          >&times;</span
+        >
         <h2 class="modal-title">Nuovo record</h2>
         <form id="addRecordForm" class="form-grid">
           <div class="form-group">
@@ -232,7 +286,9 @@
             </select>
           </div>
           <div class="form-group full-width form-actions">
-            <button type="submit" id="addSubmitButton" class="btn btn-primary">Aggiungi record</button>
+            <button type="submit" id="addSubmitButton" class="btn btn-primary">
+              Aggiungi record
+            </button>
           </div>
         </form>
       </div>
@@ -241,7 +297,13 @@
     <!-- Modal per la modifica di un record esistente -->
     <div id="editModal" class="modal">
       <div class="modal-content">
-        <span class="close-button" data-modal-id="editModal" role="button" aria-label="Chiudi">&times;</span>
+        <span
+          class="close-button"
+          data-modal-id="editModal"
+          role="button"
+          aria-label="Chiudi"
+          >&times;</span
+        >
         <h2 class="modal-title">Modifica record</h2>
         <form id="editRecordForm" class="form-grid">
           <input type="hidden" id="editId" name="id" />
@@ -298,7 +360,9 @@
             </select>
           </div>
           <div class="form-group full-width form-actions">
-            <button type="submit" id="updateButton" class="btn btn-primary">Salva modifiche</button>
+            <button type="submit" id="updateButton" class="btn btn-primary">
+              Salva modifiche
+            </button>
           </div>
         </form>
       </div>
@@ -310,8 +374,12 @@
         <h2 class="modal-title">Eliminare il record?</h2>
         <p class="modal-text">L’operazione è definitiva.</p>
         <div class="form-actions">
-          <button id="cancelDeleteButton" class="btn btn-ghost cancel-button">Annulla</button>
-          <button id="confirmDeleteButton" class="btn btn-danger delete-btn">Elimina</button>
+          <button id="cancelDeleteButton" class="btn btn-ghost cancel-button">
+            Annulla
+          </button>
+          <button id="confirmDeleteButton" class="btn btn-danger delete-btn">
+            Elimina
+          </button>
         </div>
       </div>
     </div>
@@ -324,10 +392,16 @@
           Sei sicuro di voler eliminare tutti i record filtrati?
         </p>
         <div class="form-actions">
-          <button id="cancelDeleteAllButton" class="btn btn-ghost cancel-button">
+          <button
+            id="cancelDeleteAllButton"
+            class="btn btn-ghost cancel-button"
+          >
             Annulla
           </button>
-          <button id="confirmDeleteAllButton" class="btn btn-danger delete-all-btn-confirm">
+          <button
+            id="confirmDeleteAllButton"
+            class="btn btn-danger delete-all-btn-confirm"
+          >
             Elimina
           </button>
         </div>

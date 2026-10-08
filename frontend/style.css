@@ -36,12 +36,15 @@
   /* Forma */
   --radius: 14px;
   --radius-sm: 9px;
-  --shadow-1: 0 1px 2px rgba(18, 22, 28, 0.06), 0 1px 1px rgba(18, 22, 28, 0.04);
+  --shadow-1:
+    0 1px 2px rgba(18, 22, 28, 0.06), 0 1px 1px rgba(18, 22, 28, 0.04);
   --shadow-2: 0 18px 40px -12px rgba(18, 22, 28, 0.28);
 
   /* Tipografia */
-  --font-display: "Bricolage Grotesque", "Instrument Sans", system-ui, sans-serif;
-  --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display:
+    "Bricolage Grotesque", "Instrument Sans", system-ui, sans-serif;
+  --font-body:
+    "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 body.dark {
